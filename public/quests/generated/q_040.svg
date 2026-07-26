@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#fff7e8"/>
+  <circle cx="476" cy="145" r="76" fill="#75bba7"/>
+  <path d="M0 356 Q180 246 340 376 T900 321 V650 H0Z" fill="#15251b" opacity=".13"/>
+  <rect x="74" y="198" width="45" height="362" rx="4" fill="#75bba7" opacity=".72"/><rect x="185" y="342" width="62" height="218" rx="4" fill="#15251b" opacity=".86"/><rect x="262" y="236" width="79" height="324" rx="4" fill="#75bba7" opacity=".72"/><rect x="373" y="380" width="45" height="180" rx="4" fill="#15251b" opacity=".86"/><rect x="450" y="274" width="62" height="286" rx="4" fill="#75bba7" opacity=".72"/><rect x="561" y="418" width="79" height="142" rx="4" fill="#15251b" opacity=".86"/><rect x="638" y="312" width="45" height="248" rx="4" fill="#75bba7" opacity=".72"/><rect x="749" y="206" width="62" height="354" rx="4" fill="#15251b" opacity=".86"/><rect x="826" y="350" width="79" height="210" rx="4" fill="#75bba7" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#15251b"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#75bba7" stroke-width="12"/>
+  <text x="52" y="72" fill="#15251b" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">MISSION</text>
+  <text x="52" y="615" fill="#fff7e8" font-family="Georgia, serif" font-size="26">Potrero del Sol</text>
+</svg>

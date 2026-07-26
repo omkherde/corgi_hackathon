@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#f8f1df"/>
+  <circle cx="484" cy="145" r="84" fill="#ff735d"/>
+  <path d="M0 274 Q180 164 340 294 T900 239 V650 H0Z" fill="#172a49" opacity=".13"/>
+  <rect x="64" y="392" width="45" height="168" rx="4" fill="#ff735d" opacity=".72"/><rect x="183" y="278" width="62" height="282" rx="4" fill="#172a49" opacity=".86"/><rect x="268" y="414" width="79" height="146" rx="4" fill="#ff735d" opacity=".72"/><rect x="353" y="300" width="45" height="260" rx="4" fill="#172a49" opacity=".86"/><rect x="472" y="436" width="62" height="124" rx="4" fill="#ff735d" opacity=".72"/><rect x="557" y="322" width="79" height="238" rx="4" fill="#172a49" opacity=".86"/><rect x="642" y="208" width="45" height="352" rx="4" fill="#ff735d" opacity=".72"/><rect x="727" y="344" width="62" height="216" rx="4" fill="#172a49" opacity=".86"/><rect x="846" y="230" width="79" height="330" rx="4" fill="#ff735d" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#172a49"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#ff735d" stroke-width="12"/>
+  <text x="52" y="72" fill="#172a49" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">MISSION</text>
+  <text x="52" y="615" fill="#f8f1df" font-family="Georgia, serif" font-size="26">La Palma Mexicatessen</text>
+</svg>

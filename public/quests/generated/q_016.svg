@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#f6efe3"/>
+  <circle cx="479" cy="145" r="79" fill="#caff43"/>
+  <path d="M0 359 Q180 249 340 379 T900 324 V650 H0Z" fill="#17351f" opacity=".13"/>
+  <rect x="83" y="427" width="45" height="133" rx="4" fill="#caff43" opacity=".72"/><rect x="163" y="318" width="62" height="242" rx="4" fill="#17351f" opacity=".86"/><rect x="277" y="209" width="79" height="351" rx="4" fill="#caff43" opacity=".72"/><rect x="357" y="350" width="45" height="210" rx="4" fill="#17351f" opacity=".86"/><rect x="471" y="241" width="62" height="319" rx="4" fill="#caff43" opacity=".72"/><rect x="551" y="382" width="79" height="178" rx="4" fill="#17351f" opacity=".86"/><rect x="631" y="273" width="45" height="287" rx="4" fill="#caff43" opacity=".72"/><rect x="745" y="414" width="62" height="146" rx="4" fill="#17351f" opacity=".86"/><rect x="825" y="305" width="79" height="255" rx="4" fill="#caff43" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#17351f"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#caff43" stroke-width="12"/>
+  <text x="52" y="72" fill="#17351f" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">DOGPATCH</text>
+  <text x="52" y="615" fill="#f6efe3" font-family="Georgia, serif" font-size="26">Crane Cove Park</text>
+</svg>

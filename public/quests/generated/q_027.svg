@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#f8f1df"/>
+  <circle cx="481" cy="145" r="81" fill="#ff735d"/>
+  <path d="M0 271 Q180 161 340 291 T900 236 V650 H0Z" fill="#172a49" opacity=".13"/>
+  <rect x="89" y="413" width="45" height="147" rx="4" fill="#ff735d" opacity=".72"/><rect x="171" y="302" width="62" height="258" rx="4" fill="#172a49" opacity=".86"/><rect x="253" y="191" width="79" height="369" rx="4" fill="#ff735d" opacity=".72"/><rect x="369" y="330" width="45" height="230" rx="4" fill="#172a49" opacity=".86"/><rect x="451" y="219" width="62" height="341" rx="4" fill="#ff735d" opacity=".72"/><rect x="567" y="358" width="79" height="202" rx="4" fill="#172a49" opacity=".86"/><rect x="649" y="247" width="45" height="313" rx="4" fill="#ff735d" opacity=".72"/><rect x="731" y="386" width="62" height="174" rx="4" fill="#172a49" opacity=".86"/><rect x="847" y="275" width="79" height="285" rx="4" fill="#ff735d" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#172a49"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#ff735d" stroke-width="12"/>
+  <text x="52" y="72" fill="#172a49" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">CASTRO</text>
+  <text x="52" y="615" fill="#f8f1df" font-family="Georgia, serif" font-size="26">Kite Hill</text>
+</svg>

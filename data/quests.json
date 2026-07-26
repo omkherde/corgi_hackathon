@@ -8,7 +8,8 @@
       "name": "Vulcan Stairway",
       "neighborhood": "Corona Heights",
       "lat": 37.76253,
-      "lng": -122.44203
+      "lng": -122.44203,
+      "address": "Vulcan Stairway, Corona Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -27,7 +28,8 @@
       "name": "16th Avenue Tiled Steps",
       "neighborhood": "Inner Sunset",
       "lat": 37.75627,
-      "lng": -122.47371
+      "lng": -122.47371,
+      "address": "16th Avenue Tiled Steps, Inner Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -45,7 +47,8 @@
       "name": "Billy Goat Hill",
       "neighborhood": "Glen Park",
       "lat": 37.74175,
-      "lng": -122.43339
+      "lng": -122.43339,
+      "address": "Billy Goat Hill, Glen Park, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -63,7 +66,8 @@
       "name": "Pemberton Steps",
       "neighborhood": "Twin Peaks",
       "lat": 37.7579,
-      "lng": -122.4449
+      "lng": -122.4449,
+      "address": "Pemberton Steps, Twin Peaks, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -81,7 +85,8 @@
       "name": "Seward Mini Park",
       "neighborhood": "Castro",
       "lat": 37.75774,
-      "lng": -122.44027
+      "lng": -122.44027,
+      "address": "Seward Mini Park, Castro, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -100,7 +105,8 @@
       "name": "Glen Canyon Park",
       "neighborhood": "Glen Park",
       "lat": 37.73908,
-      "lng": -122.44274
+      "lng": -122.44274,
+      "address": "Glen Canyon Park, Glen Park, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -119,7 +125,8 @@
       "name": "Harry Street Steps",
       "neighborhood": "Glen Park",
       "lat": 37.74002,
-      "lng": -122.43231
+      "lng": -122.43231,
+      "address": "Harry Street Steps, Glen Park, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -137,7 +144,8 @@
       "name": "Bernal Rock Labyrinth",
       "neighborhood": "Bernal Heights",
       "lat": 37.74472,
-      "lng": -122.41347
+      "lng": -122.41347,
+      "address": "Bernal Rock Labyrinth, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -156,7 +164,8 @@
       "name": "Douglass Playground",
       "neighborhood": "Noe Valley",
       "lat": 37.75459,
-      "lng": -122.43897
+      "lng": -122.43897,
+      "address": "Douglass Playground, Noe Valley, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -174,7 +183,8 @@
       "name": "Historic Trail",
       "neighborhood": "Mount Sutro",
       "lat": 37.75882,
-      "lng": -122.45781
+      "lng": -122.45781,
+      "address": "Historic Trail, Mount Sutro, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -193,7 +203,8 @@
       "name": "Vermont Street",
       "neighborhood": "Potrero Hill",
       "lat": 37.75793,
-      "lng": -122.40363
+      "lng": -122.40363,
+      "address": "Vermont Street, Potrero Hill, San Francisco, CA"
     },
     "durationMin": 15,
     "bestTime": [
@@ -211,7 +222,8 @@
       "name": "Heron's Head Park",
       "neighborhood": "Bayview",
       "lat": 37.73814,
-      "lng": -122.37276
+      "lng": -122.37276,
+      "address": "Heron's Head Park, Bayview, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -229,7 +241,8 @@
       "name": "McLaren Park Reservoir",
       "neighborhood": "Excelsior",
       "lat": 37.71986,
-      "lng": -122.41772
+      "lng": -122.41772,
+      "address": "McLaren Park Reservoir, Excelsior, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -247,7 +260,8 @@
       "name": "Warm Water Cove",
       "neighborhood": "Dogpatch",
       "lat": 37.76045,
-      "lng": -122.38699
+      "lng": -122.38699,
+      "address": "Warm Water Cove, Dogpatch, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -265,7 +279,8 @@
       "name": "Presidio Coastal Bluffs",
       "neighborhood": "Presidio",
       "lat": 37.79709,
-      "lng": -122.47137
+      "lng": -122.47137,
+      "address": "Presidio Coastal Bluffs, Presidio, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -284,7 +299,8 @@
       "name": "Crane Cove Park",
       "neighborhood": "Dogpatch",
       "lat": 37.75675,
-      "lng": -122.38773
+      "lng": -122.38773,
+      "address": "Crane Cove Park, Dogpatch, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -302,7 +318,8 @@
       "name": "Tank Hill",
       "neighborhood": "Cole Valley",
       "lat": 37.75994,
-      "lng": -122.44762
+      "lng": -122.44762,
+      "address": "Tank Hill, Cole Valley, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -321,7 +338,8 @@
       "name": "Potrero Branch Library",
       "neighborhood": "Potrero Hill",
       "lat": 37.75616,
-      "lng": -122.40124
+      "lng": -122.40124,
+      "address": "Potrero Branch Library, Potrero Hill, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -339,7 +357,8 @@
       "name": "Pine Lake",
       "neighborhood": "Parkside",
       "lat": 37.73635,
-      "lng": -122.4897
+      "lng": -122.4897,
+      "address": "Pine Lake, Parkside, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -357,7 +376,8 @@
       "name": "Alemany Farm",
       "neighborhood": "Bernal Heights",
       "lat": 37.73375,
-      "lng": -122.41891
+      "lng": -122.41891,
+      "address": "Alemany Farm, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -375,7 +395,8 @@
       "name": "Palega Recreation Center",
       "neighborhood": "Portola",
       "lat": 37.72869,
-      "lng": -122.40945
+      "lng": -122.40945,
+      "address": "Palega Recreation Center, Portola, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -393,7 +414,8 @@
       "name": "Interior Greenbelt",
       "neighborhood": "Forest Knolls",
       "lat": 37.75831,
-      "lng": -122.45925
+      "lng": -122.45925,
+      "address": "Interior Greenbelt, Forest Knolls, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -412,7 +434,8 @@
       "name": "Jerry Garcia Amphitheater",
       "neighborhood": "Excelsior",
       "lat": 37.71761,
-      "lng": -122.42066
+      "lng": -122.42066,
+      "address": "Jerry Garcia Amphitheater, Excelsior, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -430,7 +453,8 @@
       "name": "India Basin Shoreline Park",
       "neighborhood": "Bayview",
       "lat": 37.73393,
-      "lng": -122.37874
+      "lng": -122.37874,
+      "address": "India Basin Shoreline Park, Bayview, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -449,7 +473,8 @@
       "name": "Esprit Park",
       "neighborhood": "Dogpatch",
       "lat": 37.76139,
-      "lng": -122.39062
+      "lng": -122.39062,
+      "address": "Esprit Park, Dogpatch, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -467,7 +492,8 @@
       "name": "Cayuga Playground",
       "neighborhood": "Outer Mission",
       "lat": 37.71485,
-      "lng": -122.45039
+      "lng": -122.45039,
+      "address": "Cayuga Playground, Outer Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -485,7 +511,8 @@
       "name": "Kite Hill",
       "neighborhood": "Castro",
       "lat": 37.75613,
-      "lng": -122.44173
+      "lng": -122.44173,
+      "address": "Kite Hill, Castro, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -503,7 +530,8 @@
       "name": "Veterans Wash Center",
       "neighborhood": "Outer Richmond",
       "lat": 37.78104,
-      "lng": -122.48731
+      "lng": -122.48731,
+      "address": "Veterans Wash Center, Outer Richmond, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -521,7 +549,8 @@
       "name": "Sunnyside Conservatory",
       "neighborhood": "Sunnyside",
       "lat": 37.73158,
-      "lng": -122.44038
+      "lng": -122.44038,
+      "address": "Sunnyside Conservatory, Sunnyside, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -539,7 +568,8 @@
       "name": "Fort Mason Piers",
       "neighborhood": "Marina",
       "lat": 37.80671,
-      "lng": -122.43158
+      "lng": -122.43158,
+      "address": "Fort Mason Piers, Marina, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -557,7 +587,8 @@
       "name": "Brooks Park",
       "neighborhood": "Oceanview",
       "lat": 37.70889,
-      "lng": -122.46637
+      "lng": -122.46637,
+      "address": "Brooks Park, Oceanview, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -575,7 +606,8 @@
       "name": "Noe Valley Little Free Library",
       "neighborhood": "Noe Valley",
       "lat": 37.7484,
-      "lng": -122.4314
+      "lng": -122.4314,
+      "address": "Noe Valley Little Free Library, Noe Valley, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -593,7 +625,8 @@
       "name": "Balmy Alley",
       "neighborhood": "Mission",
       "lat": 37.75168,
-      "lng": -122.41242
+      "lng": -122.41242,
+      "address": "Balmy Alley, Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -612,7 +645,8 @@
       "name": "Islais Creek Shoreline",
       "neighborhood": "Bayview",
       "lat": 37.74661,
-      "lng": -122.38664
+      "lng": -122.38664,
+      "address": "Islais Creek Shoreline, Bayview, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -630,7 +664,8 @@
       "name": "22nd Street Caltrain",
       "neighborhood": "Dogpatch",
       "lat": 37.7576,
-      "lng": -122.39253
+      "lng": -122.39253,
+      "address": "22nd Street Caltrain, Dogpatch, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -648,7 +683,8 @@
       "name": "Mission Street at 29th",
       "neighborhood": "Bernal Heights",
       "lat": 37.74432,
-      "lng": -122.42076
+      "lng": -122.42076,
+      "address": "Mission Street at 29th, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -666,7 +702,8 @@
       "name": "Bernal Cut",
       "neighborhood": "Glen Park",
       "lat": 37.73324,
-      "lng": -122.43477
+      "lng": -122.43477,
+      "address": "Bernal Cut, Glen Park, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -684,7 +721,8 @@
       "name": "Alemany Farmers Market",
       "neighborhood": "Bernal Heights",
       "lat": 37.73543,
-      "lng": -122.40967
+      "lng": -122.40967,
+      "address": "Alemany Farmers Market, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -702,7 +740,8 @@
       "name": "Lincoln Park Steps",
       "neighborhood": "Outer Richmond",
       "lat": 37.78344,
-      "lng": -122.50171
+      "lng": -122.50171,
+      "address": "Lincoln Park Steps, Outer Richmond, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -720,7 +759,8 @@
       "name": "Potrero del Sol",
       "neighborhood": "Mission",
       "lat": 37.74914,
-      "lng": -122.40591
+      "lng": -122.40591,
+      "address": "Potrero del Sol, Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -738,7 +778,8 @@
       "name": "24 Divisadero at Cortland",
       "neighborhood": "Bernal Heights",
       "lat": 37.73887,
-      "lng": -122.41606
+      "lng": -122.41606,
+      "address": "24 Divisadero at Cortland, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -756,7 +797,8 @@
       "name": "Precita Avenue",
       "neighborhood": "Bernal Heights",
       "lat": 37.747,
-      "lng": -122.41273
+      "lng": -122.41273,
+      "address": "Precita Avenue, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -775,7 +817,8 @@
       "name": "500 Club",
       "neighborhood": "Mission",
       "lat": 37.76319,
-      "lng": -122.41968
+      "lng": -122.41968,
+      "address": "500 Club, Mission, San Francisco, CA"
     },
     "durationMin": 15,
     "bestTime": [
@@ -793,7 +836,8 @@
       "name": "Cayuga Playground",
       "neighborhood": "Outer Mission",
       "lat": 37.71485,
-      "lng": -122.45039
+      "lng": -122.45039,
+      "address": "Cayuga Playground, Outer Mission, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -811,7 +855,8 @@
       "name": "Candlestick Point",
       "neighborhood": "Bayview",
       "lat": 37.70972,
-      "lng": -122.38266
+      "lng": -122.38266,
+      "address": "Candlestick Point, Bayview, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -830,7 +875,8 @@
       "name": "Fifth and Mission Garage",
       "neighborhood": "SoMa",
       "lat": 37.78331,
-      "lng": -122.40663
+      "lng": -122.40663,
+      "address": "Fifth and Mission Garage, SoMa, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -848,7 +894,8 @@
       "name": "Ina Coolbrith Park",
       "neighborhood": "Russian Hill",
       "lat": 37.79843,
-      "lng": -122.41328
+      "lng": -122.41328,
+      "address": "Ina Coolbrith Park, Russian Hill, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -866,7 +913,8 @@
       "name": "Ocean Beach at Rivera",
       "neighborhood": "Outer Sunset",
       "lat": 37.74634,
-      "lng": -122.50778
+      "lng": -122.50778,
+      "address": "Ocean Beach at Rivera, Outer Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -885,7 +933,8 @@
       "name": "John Campbell's Irish Bakery",
       "neighborhood": "Outer Sunset",
       "lat": 37.75392,
-      "lng": -122.49743
+      "lng": -122.49743,
+      "address": "John Campbell's Irish Bakery, Outer Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -903,7 +952,8 @@
       "name": "Samiramis Imports",
       "neighborhood": "Mission",
       "lat": 37.74246,
-      "lng": -122.42219
+      "lng": -122.42219,
+      "address": "Samiramis Imports, Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -921,7 +971,8 @@
       "name": "House of Pancakes",
       "neighborhood": "Taraval",
       "lat": 37.74286,
-      "lng": -122.47844
+      "lng": -122.47844,
+      "address": "House of Pancakes, Taraval, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -939,7 +990,8 @@
       "name": "Alemany Farmers Market",
       "neighborhood": "Bernal Heights",
       "lat": 37.73543,
-      "lng": -122.40967
+      "lng": -122.40967,
+      "address": "Alemany Farmers Market, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -957,7 +1009,8 @@
       "name": "Pineapple King Bakery",
       "neighborhood": "Outer Sunset",
       "lat": 37.76396,
-      "lng": -122.47708
+      "lng": -122.47708,
+      "address": "Pineapple King Bakery, Outer Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -976,7 +1029,8 @@
       "name": "Breakfast at Tiffany's",
       "neighborhood": "Portola",
       "lat": 37.72673,
-      "lng": -122.40377
+      "lng": -122.40377,
+      "address": "Breakfast at Tiffany's, Portola, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -994,7 +1048,8 @@
       "name": "Marco Polo Italian Ice Cream",
       "neighborhood": "Outer Sunset",
       "lat": 37.74314,
-      "lng": -122.47857
+      "lng": -122.47857,
+      "address": "Marco Polo Italian Ice Cream, Outer Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1012,7 +1067,8 @@
       "name": "Manila Oriental Market",
       "neighborhood": "Excelsior",
       "lat": 37.72536,
-      "lng": -122.43424
+      "lng": -122.43424,
+      "address": "Manila Oriental Market, Excelsior, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1030,7 +1086,8 @@
       "name": "La Palma Mexicatessen",
       "neighborhood": "Mission",
       "lat": 37.75297,
-      "lng": -122.40943
+      "lng": -122.40943,
+      "address": "La Palma Mexicatessen, Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1048,7 +1105,8 @@
       "name": "San Bruno Avenue",
       "neighborhood": "Portola",
       "lat": 37.72927,
-      "lng": -122.40445
+      "lng": -122.40445,
+      "address": "San Bruno Avenue, Portola, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1066,7 +1124,8 @@
       "name": "Tadu Ethiopian Kitchen",
       "neighborhood": "Tenderloin",
       "lat": 37.78383,
-      "lng": -122.41407
+      "lng": -122.41407,
+      "address": "Tadu Ethiopian Kitchen, Tenderloin, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1084,7 +1143,8 @@
       "name": "Arizmendi Bakery",
       "neighborhood": "Inner Sunset",
       "lat": 37.76345,
-      "lng": -122.46616
+      "lng": -122.46616,
+      "address": "Arizmendi Bakery, Inner Sunset, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1102,7 +1162,8 @@
       "name": "Duc Loi Supermarket",
       "neighborhood": "Mission",
       "lat": 37.756,
-      "lng": -122.41857
+      "lng": -122.41857,
+      "address": "Duc Loi Supermarket, Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1120,7 +1181,8 @@
       "name": "Yuanbao Jiaozi",
       "neighborhood": "Outer Sunset",
       "lat": 37.75396,
-      "lng": -122.49425
+      "lng": -122.49425,
+      "address": "Yuanbao Jiaozi, Outer Sunset, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1139,7 +1201,8 @@
       "name": "Mission Street at Cortland",
       "neighborhood": "Bernal Heights",
       "lat": 37.74075,
-      "lng": -122.42306
+      "lng": -122.42306,
+      "address": "Mission Street at Cortland, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1157,7 +1220,8 @@
       "name": "Good Mong Kok Bakery",
       "neighborhood": "Chinatown",
       "lat": 37.79536,
-      "lng": -122.40822
+      "lng": -122.40822,
+      "address": "Good Mong Kok Bakery, Chinatown, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1175,7 +1239,8 @@
       "name": "Monterey Boulevard",
       "neighborhood": "Sunnyside",
       "lat": 37.73173,
-      "lng": -122.44313
+      "lng": -122.44313,
+      "address": "Monterey Boulevard, Sunnyside, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1193,7 +1258,8 @@
       "name": "Geneva Avenue Payphone",
       "neighborhood": "Excelsior",
       "lat": 37.71828,
-      "lng": -122.4402
+      "lng": -122.4402,
+      "address": "Geneva Avenue Payphone, Excelsior, San Francisco, CA"
     },
     "durationMin": 15,
     "bestTime": [
@@ -1211,7 +1277,8 @@
       "name": "Egbert Avenue",
       "neighborhood": "Bayview",
       "lat": 37.71694,
-      "lng": -122.39291
+      "lng": -122.39291,
+      "address": "Egbert Avenue, Bayview, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1229,7 +1296,8 @@
       "name": "Grandview Park East Slope",
       "neighborhood": "Inner Sunset",
       "lat": 37.75637,
-      "lng": -122.47195
+      "lng": -122.47195,
+      "address": "Grandview Park East Slope, Inner Sunset, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1247,7 +1315,8 @@
       "name": "McLaren Park",
       "neighborhood": "Excelsior",
       "lat": 37.7176,
-      "lng": -122.4197
+      "lng": -122.4197,
+      "address": "McLaren Park, Excelsior, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1265,7 +1334,8 @@
       "name": "Precita Park",
       "neighborhood": "Bernal Heights",
       "lat": 37.7473,
-      "lng": -122.41337
+      "lng": -122.41337,
+      "address": "Precita Park, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1283,7 +1353,8 @@
       "name": "Bosworth Pedestrian Tunnel",
       "neighborhood": "Glen Park",
       "lat": 37.73328,
-      "lng": -122.4342
+      "lng": -122.4342,
+      "address": "Bosworth Pedestrian Tunnel, Glen Park, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1301,7 +1372,8 @@
       "name": "Holly Park",
       "neighborhood": "Bernal Heights",
       "lat": 37.73709,
-      "lng": -122.41727
+      "lng": -122.41727,
+      "address": "Holly Park, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1319,7 +1391,8 @@
       "name": "Farnsworth Steps",
       "neighborhood": "Forest Hill",
       "lat": 37.7488,
-      "lng": -122.46408
+      "lng": -122.46408,
+      "address": "Farnsworth Steps, Forest Hill, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1337,7 +1410,8 @@
       "name": "Elizabeth Street",
       "neighborhood": "Noe Valley",
       "lat": 37.75241,
-      "lng": -122.43425
+      "lng": -122.43425,
+      "address": "Elizabeth Street, Noe Valley, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1355,7 +1429,8 @@
       "name": "Mount Davidson",
       "neighborhood": "Miraloma Park",
       "lat": 37.73822,
-      "lng": -122.45428
+      "lng": -122.45428,
+      "address": "Mount Davidson, Miraloma Park, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1373,7 +1448,8 @@
       "name": "Third Street at Quesada",
       "neighborhood": "Bayview",
       "lat": 37.73312,
-      "lng": -122.39027
+      "lng": -122.39027,
+      "address": "Third Street at Quesada, Bayview, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1391,7 +1467,8 @@
       "name": "Persia Triangle",
       "neighborhood": "Excelsior",
       "lat": 37.72365,
-      "lng": -122.43516
+      "lng": -122.43516,
+      "address": "Persia Triangle, Excelsior, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1409,7 +1486,8 @@
       "name": "Mission Street South",
       "neighborhood": "Bernal Heights",
       "lat": 37.74204,
-      "lng": -122.42161
+      "lng": -122.42161,
+      "address": "Mission Street South, Bernal Heights, San Francisco, CA"
     },
     "durationMin": 60,
     "bestTime": [
@@ -1427,7 +1505,8 @@
       "name": "Visitacion Avenue",
       "neighborhood": "Visitacion Valley",
       "lat": 37.71338,
-      "lng": -122.40892
+      "lng": -122.40892,
+      "address": "Visitacion Avenue, Visitacion Valley, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [
@@ -1445,7 +1524,8 @@
       "name": "Cayuga Playground",
       "neighborhood": "Outer Mission",
       "lat": 37.71485,
-      "lng": -122.45039
+      "lng": -122.45039,
+      "address": "Cayuga Playground, Outer Mission, San Francisco, CA"
     },
     "durationMin": 30,
     "bestTime": [

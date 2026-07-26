@@ -6,6 +6,7 @@ export type Quest = {
   location: {
     name: string;
     neighborhood: string;
+    address?: string;
     lat: number;
     lng: number;
   };

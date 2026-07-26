@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#dce7ce"/>
+  <circle cx="483" cy="145" r="83" fill="#5f7cff"/>
+  <path d="M0 273 Q180 163 340 293 T900 238 V650 H0Z" fill="#15251b" opacity=".13"/>
+  <rect x="61" y="399" width="45" height="161" rx="4" fill="#5f7cff" opacity=".72"/><rect x="179" y="286" width="62" height="274" rx="4" fill="#15251b" opacity=".86"/><rect x="263" y="423" width="79" height="137" rx="4" fill="#5f7cff" opacity=".72"/><rect x="347" y="310" width="45" height="250" rx="4" fill="#15251b" opacity=".86"/><rect x="465" y="197" width="62" height="363" rx="4" fill="#5f7cff" opacity=".72"/><rect x="549" y="334" width="79" height="226" rx="4" fill="#15251b" opacity=".86"/><rect x="633" y="221" width="45" height="339" rx="4" fill="#5f7cff" opacity=".72"/><rect x="751" y="358" width="62" height="202" rx="4" fill="#15251b" opacity=".86"/><rect x="835" y="245" width="79" height="315" rx="4" fill="#5f7cff" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#15251b"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#5f7cff" stroke-width="12"/>
+  <text x="52" y="72" fill="#15251b" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">BERNAL HEIGHTS</text>
+  <text x="52" y="615" fill="#dce7ce" font-family="Georgia, serif" font-size="26">Alemany Farmers Market</text>
+</svg>

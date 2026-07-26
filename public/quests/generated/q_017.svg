@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <rect width="900" height="650" fill="#f8f1df"/>
+  <circle cx="480" cy="145" r="80" fill="#ff735d"/>
+  <path d="M0 270 Q180 160 340 290 T900 235 V650 H0Z" fill="#172a49" opacity=".13"/>
+  <rect x="86" y="420" width="45" height="140" rx="4" fill="#ff735d" opacity=".72"/><rect x="167" y="310" width="62" height="250" rx="4" fill="#172a49" opacity=".86"/><rect x="282" y="200" width="79" height="360" rx="4" fill="#ff735d" opacity=".72"/><rect x="363" y="340" width="45" height="220" rx="4" fill="#172a49" opacity=".86"/><rect x="444" y="230" width="62" height="330" rx="4" fill="#ff735d" opacity=".72"/><rect x="559" y="370" width="79" height="190" rx="4" fill="#172a49" opacity=".86"/><rect x="640" y="260" width="45" height="300" rx="4" fill="#ff735d" opacity=".72"/><rect x="755" y="400" width="62" height="160" rx="4" fill="#172a49" opacity=".86"/><rect x="836" y="290" width="79" height="270" rx="4" fill="#ff735d" opacity=".72"/>
+  <path d="M0 548 Q190 470 390 550 T900 515 V650 H0Z" fill="#172a49"/>
+  <path d="M0 575 Q220 510 420 590 T900 548" fill="none" stroke="#ff735d" stroke-width="12"/>
+  <text x="52" y="72" fill="#172a49" font-family="Arial, sans-serif" font-size="18" font-weight="800" letter-spacing="4">COLE VALLEY</text>
+  <text x="52" y="615" fill="#f8f1df" font-family="Georgia, serif" font-size="26">Tank Hill</text>
+</svg>
