@@ -140,12 +140,22 @@ export default function Home() {
 
   async function sendQuest() {
     if (!current || sending) return;
+    const savedRecipient = window.localStorage.getItem("detour:recipient") ?? "";
+    const recipient =
+      savedRecipient ||
+      window.prompt(
+        "Who should get this quest? Enter an iMessage phone number with country code.",
+        "+1",
+      )?.trim();
+    if (!recipient) return;
+    window.localStorage.setItem("detour:recipient", recipient);
+
     setSending(true);
     try {
       const response = await fetch("/api/send-quest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quest: current }),
+        body: JSON.stringify({ quest: current, recipient }),
       });
       const data = (await response.json()) as { error?: string };
       if (!response.ok) throw new Error(data.error || "Could not send");
