@@ -1,0 +1,50 @@
+[
+  {
+    "id": "q_001",
+    "title": "The fog line race",
+    "body": "Climb the Vulcan steps before 8 AM and stop exactly where the fog turns into blue sky. Take one photo facing each direction without moving your feet.",
+    "vibe": "active",
+    "location": {
+      "name": "Vulcan Stairway",
+      "neighborhood": "Corona Heights",
+      "lat": 37.76253,
+      "lng": -122.44203
+    },
+    "durationMin": 30,
+    "bestTime": ["early_morning", "foggy"],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_002",
+    "title": "The last bench before dark",
+    "body": "Reach the bench above Tank Hill fifteen minutes before sunset. Sit until the city lights outnumber the people, and keep your phones in your pockets.",
+    "vibe": "chill",
+    "location": {
+      "name": "Tank Hill",
+      "neighborhood": "Cole Valley",
+      "lat": 37.75994,
+      "lng": -122.44762
+    },
+    "durationMin": 60,
+    "bestTime": ["golden_hour", "sunset"],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_003",
+    "title": "The color nobody frames",
+    "body": "Find the most sun-faded door on Balmy Alley after a rainy morning. Photograph only its shadow, then compare it with the door itself.",
+    "vibe": "photo",
+    "location": {
+      "name": "Balmy Alley",
+      "neighborhood": "Mission",
+      "lat": 37.75168,
+      "lng": -122.41242
+    },
+    "durationMin": 30,
+    "bestTime": ["after_rain", "morning"],
+    "groupSize": "solo",
+    "weirdness": 4
+  }
+]

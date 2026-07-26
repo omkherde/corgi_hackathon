@@ -1,0 +1,1457 @@
+[
+  {
+    "id": "q_001",
+    "title": "The fog line race",
+    "body": "Climb the Vulcan steps before 8 AM and stop exactly where the fog turns into blue sky. Take one photo facing each direction without moving your feet.",
+    "vibe": "active",
+    "location": {
+      "name": "Vulcan Stairway",
+      "neighborhood": "Corona Heights",
+      "lat": 37.76253,
+      "lng": -122.44203
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning",
+      "foggy"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_002",
+    "title": "The no-escalator commute",
+    "body": "Start at the bottom of the 16th Avenue steps just after sunrise. Reach the top without pausing, then walk down the parallel street without looking back.",
+    "vibe": "active",
+    "location": {
+      "name": "16th Avenue Tiled Steps",
+      "neighborhood": "Inner Sunset",
+      "lat": 37.75627,
+      "lng": -122.47371
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 3
+  },
+  {
+    "id": "q_003",
+    "title": "Three hills, one song",
+    "body": "Pick one song longer than seven minutes and start it at the base of Billy Goat Hill. Reach the rope swing overlook before it ends.",
+    "vibe": "active",
+    "location": {
+      "name": "Billy Goat Hill",
+      "neighborhood": "Glen Park",
+      "lat": 37.74175,
+      "lng": -122.43339
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "golden_hour"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_004",
+    "title": "The stairway with no street",
+    "body": "Find the Pemberton steps before the neighborhood wakes up. Climb every flight, but turn around only at landings with a view.",
+    "vibe": "active",
+    "location": {
+      "name": "Pemberton Steps",
+      "neighborhood": "Twin Peaks",
+      "lat": 37.7579,
+      "lng": -122.4449
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_005",
+    "title": "The concrete slide circuit",
+    "body": "Bring cardboard to the Seward slides on a dry weekday morning. Take exactly three runs, making each one quieter than the last.",
+    "vibe": "active",
+    "location": {
+      "name": "Seward Mini Park",
+      "neighborhood": "Castro",
+      "lat": 37.75774,
+      "lng": -122.44027
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "weekday_morning",
+      "dry"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_006",
+    "title": "The creek you can almost hear",
+    "body": "Enter Glen Canyon after rain and follow the lowest trail for twenty minutes. Stop wherever traffic disappears and count five separate bird calls.",
+    "vibe": "active",
+    "location": {
+      "name": "Glen Canyon Park",
+      "neighborhood": "Glen Park",
+      "lat": 37.73908,
+      "lng": -122.44274
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "after_rain",
+      "morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 3
+  },
+  {
+    "id": "q_007",
+    "title": "The midnight switchbacks",
+    "body": "Walk the Harry Street steps after 9 PM with one friend. At every landing, trade who leads without saying why.",
+    "vibe": "active",
+    "location": {
+      "name": "Harry Street Steps",
+      "neighborhood": "Glen Park",
+      "lat": 37.74002,
+      "lng": -122.43231
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_008",
+    "title": "The wind test",
+    "body": "Cross the Bernal rock labyrinth on the windiest afternoon you can find. Keep one hand in your pocket the entire way.",
+    "vibe": "active",
+    "location": {
+      "name": "Bernal Rock Labyrinth",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.74472,
+      "lng": -122.41347
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "windy",
+      "afternoon"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_009",
+    "title": "The hidden tennis warm-up",
+    "body": "Reach the little court at Douglass Park before 7 AM. Rally until someone hits the fence, then leave immediately.",
+    "vibe": "active",
+    "location": {
+      "name": "Douglass Playground",
+      "neighborhood": "Noe Valley",
+      "lat": 37.75459,
+      "lng": -122.43897
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_010",
+    "title": "The eucalyptus sprint",
+    "body": "Enter Mount Sutro when the fog is thick enough to bead on your sleeves. Power-walk to the summit and do not check the map twice.",
+    "vibe": "active",
+    "location": {
+      "name": "Historic Trail",
+      "neighborhood": "Mount Sutro",
+      "lat": 37.75882,
+      "lng": -122.45781
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "foggy",
+      "morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_011",
+    "title": "The crooked block climb",
+    "body": "Start at the bottom of Vermont Street at blue hour. Walk its curves backward while your friend watches for cars.",
+    "vibe": "active",
+    "location": {
+      "name": "Vermont Street",
+      "neighborhood": "Potrero Hill",
+      "lat": 37.75793,
+      "lng": -122.40363
+    },
+    "durationMin": 15,
+    "bestTime": [
+      "blue_hour"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_012",
+    "title": "The tide-line dash",
+    "body": "At low tide, walk the narrow strip below Heron's Head as far as dry shoes allow. Race the returning water back to the path.",
+    "vibe": "active",
+    "location": {
+      "name": "Heron's Head Park",
+      "neighborhood": "Bayview",
+      "lat": 37.73814,
+      "lng": -122.37276
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "low_tide"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_013",
+    "title": "The reservoir lap with rules",
+    "body": "Circle the Upper Reservoir at golden hour. Jog the sunny side, walk the shadow side, and switch every time a dog passes.",
+    "vibe": "active",
+    "location": {
+      "name": "McLaren Park Reservoir",
+      "neighborhood": "Excelsior",
+      "lat": 37.71986,
+      "lng": -122.41772
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "golden_hour"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_014",
+    "title": "The industrial shoreline mile",
+    "body": "Start at Warm Water Cove before the lunch trucks arrive. Walk south until you find three different warning signs, then retrace the route faster.",
+    "vibe": "active",
+    "location": {
+      "name": "Warm Water Cove",
+      "neighborhood": "Dogpatch",
+      "lat": 37.76045,
+      "lng": -122.38699
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "weekday_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_015",
+    "title": "The dune crossing",
+    "body": "Enter the Presidio dunes just after a windy night. Follow only footprints that are already fading and leave no straight path of your own.",
+    "vibe": "active",
+    "location": {
+      "name": "Presidio Coastal Bluffs",
+      "neighborhood": "Presidio",
+      "lat": 37.79709,
+      "lng": -122.47137
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "early_morning",
+      "windy"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_016",
+    "title": "The dawn pier count",
+    "body": "Reach Pier 70 before sunrise and walk every public edge you can find. Count cranes, not boats, and turn back at twelve.",
+    "vibe": "active",
+    "location": {
+      "name": "Crane Cove Park",
+      "neighborhood": "Dogpatch",
+      "lat": 37.75675,
+      "lng": -122.38773
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "sunrise"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_017",
+    "title": "The last bench before dark",
+    "body": "Reach the bench above Tank Hill fifteen minutes before sunset. Sit until the city lights outnumber the people, and keep your phones in your pockets.",
+    "vibe": "chill",
+    "location": {
+      "name": "Tank Hill",
+      "neighborhood": "Cole Valley",
+      "lat": 37.75994,
+      "lng": -122.44762
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "golden_hour",
+      "sunset"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_018",
+    "title": "The library's smallest window",
+    "body": "Go to the Potrero branch during the last hour before closing. Find the seat with the narrowest view and read ten pages of something chosen from the returns cart.",
+    "vibe": "chill",
+    "location": {
+      "name": "Potrero Branch Library",
+      "neighborhood": "Potrero Hill",
+      "lat": 37.75616,
+      "lng": -122.40124
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "late_afternoon"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_019",
+    "title": "The quiet side of the reservoir",
+    "body": "Reach Pine Lake before 9 AM and sit on the side without a path. Stay until you see the same bird land twice.",
+    "vibe": "chill",
+    "location": {
+      "name": "Pine Lake",
+      "neighborhood": "Parkside",
+      "lat": 37.73635,
+      "lng": -122.4897
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 3
+  },
+  {
+    "id": "q_020",
+    "title": "The greenhouse rain room",
+    "body": "Visit the tiny greenhouse at Alemany Farm while it is raining. Listen from under the awning for ten minutes before stepping inside.",
+    "vibe": "chill",
+    "location": {
+      "name": "Alemany Farm",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.73375,
+      "lng": -122.41891
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "raining"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_021",
+    "title": "The blue-hour bleachers",
+    "body": "Sit on the highest empty bleacher at Palega just after sunset. Each person names one window they think has the best life behind it.",
+    "vibe": "chill",
+    "location": {
+      "name": "Palega Recreation Center",
+      "neighborhood": "Portola",
+      "lat": 37.72869,
+      "lng": -122.40945
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "blue_hour"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_022",
+    "title": "The eucalyptus weather report",
+    "body": "Lie beneath the trees at Interior Greenbelt on a foggy afternoon. Decide what the weather sounds like without using any weather words.",
+    "vibe": "chill",
+    "location": {
+      "name": "Interior Greenbelt",
+      "neighborhood": "Forest Knolls",
+      "lat": 37.75831,
+      "lng": -122.45925
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "foggy",
+      "afternoon"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_023",
+    "title": "The empty amphitheater",
+    "body": "Find the stone seats at McLaren's Jerry Garcia Amphitheater before noon on a weekday. Sit in three different rows and choose which one makes silence sound largest.",
+    "vibe": "chill",
+    "location": {
+      "name": "Jerry Garcia Amphitheater",
+      "neighborhood": "Excelsior",
+      "lat": 37.71761,
+      "lng": -122.42066
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "weekday_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_024",
+    "title": "The ferry wake watch",
+    "body": "Stand at India Basin after the afternoon wind starts. Watch five boat wakes arrive without checking which boat made them.",
+    "vibe": "chill",
+    "location": {
+      "name": "India Basin Shoreline Park",
+      "neighborhood": "Bayview",
+      "lat": 37.73393,
+      "lng": -122.37874
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "afternoon",
+      "windy"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_025",
+    "title": "The two-cup thermos",
+    "body": "Bring one thermos to Esprit Park at 7 AM and two cups. Pour both before either person speaks.",
+    "vibe": "chill",
+    "location": {
+      "name": "Esprit Park",
+      "neighborhood": "Dogpatch",
+      "lat": 37.76139,
+      "lng": -122.39062
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_026",
+    "title": "The garden after closing time",
+    "body": "Reach the gate of the Cayuga playground garden ten minutes before dusk. Walk the outside fence and pick a carved face to remember without photographing it.",
+    "vibe": "chill",
+    "location": {
+      "name": "Cayuga Playground",
+      "neighborhood": "Outer Mission",
+      "lat": 37.71485,
+      "lng": -122.45039
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "dusk"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_027",
+    "title": "The hill that faces away",
+    "body": "Sit on the east slope of Kite Hill at sunset, facing away from downtown. Leave only when the grass stops looking green.",
+    "vibe": "chill",
+    "location": {
+      "name": "Kite Hill",
+      "neighborhood": "Castro",
+      "lat": 37.75613,
+      "lng": -122.44173
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "sunset"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_028",
+    "title": "The laundromat intermission",
+    "body": "Start a wash cycle at a neighborhood laundromat after 8 PM. Spend the whole cycle outside on the nearest bench with no headphones.",
+    "vibe": "chill",
+    "location": {
+      "name": "Veterans Wash Center",
+      "neighborhood": "Outer Richmond",
+      "lat": 37.78104,
+      "lng": -122.48731
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_029",
+    "title": "The secret picnic table",
+    "body": "Find the single table behind Sunnyside Conservatory on a weekday afternoon. Bring one fruit neither person has eaten this month.",
+    "vibe": "chill",
+    "location": {
+      "name": "Sunnyside Conservatory",
+      "neighborhood": "Sunnyside",
+      "lat": 37.73158,
+      "lng": -122.44038
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "weekday_afternoon"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_030",
+    "title": "The fog bell pause",
+    "body": "Stand near the Fort Mason piers when the foghorns begin. Close your eyes for three signals, then point toward the one that sounded farthest away.",
+    "vibe": "chill",
+    "location": {
+      "name": "Fort Mason Piers",
+      "neighborhood": "Marina",
+      "lat": 37.80671,
+      "lng": -122.43158
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "foggy"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_031",
+    "title": "The after-rain overlook",
+    "body": "Visit Brooks Park within an hour after the rain stops. Sit where the grass is still dry and watch the clouds leave before you do.",
+    "vibe": "chill",
+    "location": {
+      "name": "Brooks Park",
+      "neighborhood": "Oceanview",
+      "lat": 37.70889,
+      "lng": -122.46637
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "after_rain"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_032",
+    "title": "The midnight book exchange",
+    "body": "Take a book you are finished with to a sidewalk library after 10 PM. Leave it, take nothing, and read the handwritten notes inside three others.",
+    "vibe": "chill",
+    "location": {
+      "name": "Noe Valley Little Free Library",
+      "neighborhood": "Noe Valley",
+      "lat": 37.7484,
+      "lng": -122.4314
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_033",
+    "title": "The color nobody frames",
+    "body": "Find the most sun-faded door on Balmy Alley after a rainy morning. Photograph only its shadow, then compare it with the door itself.",
+    "vibe": "photo",
+    "location": {
+      "name": "Balmy Alley",
+      "neighborhood": "Mission",
+      "lat": 37.75168,
+      "lng": -122.41242
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "after_rain",
+      "morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_034",
+    "title": "Twelve shades of concrete",
+    "body": "Walk the Islais Creek edge at noon, when the light is least flattering. Make a twelve-photo grid using only concrete and water.",
+    "vibe": "photo",
+    "location": {
+      "name": "Islais Creek Shoreline",
+      "neighborhood": "Bayview",
+      "lat": 37.74661,
+      "lng": -122.38664
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "midday"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_035",
+    "title": "The upside-down skyline",
+    "body": "Go to a puddled street in Dogpatch after rain. Photograph the skyline only through reflections and never point the camera above your waist.",
+    "vibe": "photo",
+    "location": {
+      "name": "22nd Street Caltrain",
+      "neighborhood": "Dogpatch",
+      "lat": 37.7576,
+      "lng": -122.39253
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "after_rain"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_036",
+    "title": "The accidental alphabet",
+    "body": "Walk one block of Mission Street before 8 AM. Find five letters made by fire escapes, wires, or shadows—no printed signs allowed.",
+    "vibe": "photo",
+    "location": {
+      "name": "Mission Street at 29th",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.74432,
+      "lng": -122.42076
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_037",
+    "title": "The orange window",
+    "body": "Reach the Bernal Cut at golden hour. Frame the same passing train through three different gaps in the fence.",
+    "vibe": "photo",
+    "location": {
+      "name": "Bernal Cut",
+      "neighborhood": "Glen Park",
+      "lat": 37.73324,
+      "lng": -122.43477
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "golden_hour"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_038",
+    "title": "The one-color market",
+    "body": "Enter Alemany Market in its final hour. Pick one color and photograph it seven times without capturing a face.",
+    "vibe": "photo",
+    "location": {
+      "name": "Alemany Farmers Market",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.73543,
+      "lng": -122.40967
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "market_closing"
+    ],
+    "groupSize": "solo",
+    "weirdness": 3
+  },
+  {
+    "id": "q_039",
+    "title": "The shadow staircase",
+    "body": "Reach the Lincoln Park steps when the sun is low. Photograph the stairs without including a single tile—shadows only.",
+    "vibe": "photo",
+    "location": {
+      "name": "Lincoln Park Steps",
+      "neighborhood": "Outer Richmond",
+      "lat": 37.78344,
+      "lng": -122.50171
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "golden_hour"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_040",
+    "title": "The smallest skyline",
+    "body": "Find a view of downtown through a chain-link opening at Potrero del Sol. Make the whole skyline fit inside one diamond.",
+    "vibe": "photo",
+    "location": {
+      "name": "Potrero del Sol",
+      "neighborhood": "Mission",
+      "lat": 37.74914,
+      "lng": -122.40591
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "late_afternoon"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_041",
+    "title": "The night bus triptych",
+    "body": "Ride the 24 for exactly three stops after 9 PM. At each stop, photograph the same empty seat from a different angle.",
+    "vibe": "photo",
+    "location": {
+      "name": "24 Divisadero at Cortland",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.73887,
+      "lng": -122.41606
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_042",
+    "title": "The painted utility hunt",
+    "body": "Walk Precita Avenue on a foggy morning and find four utility boxes painted in incompatible styles. Frame them as if they belong together.",
+    "vibe": "photo",
+    "location": {
+      "name": "Precita Avenue",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.747,
+      "lng": -122.41273
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "foggy",
+      "morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_043",
+    "title": "The red-light portrait",
+    "body": "Stand beneath the old neon at the 500 Club after dark. Make a portrait using only reflected red light—keep the sign outside the frame.",
+    "vibe": "photo",
+    "location": {
+      "name": "500 Club",
+      "neighborhood": "Mission",
+      "lat": 37.76319,
+      "lng": -122.41968
+    },
+    "durationMin": 15,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_044",
+    "title": "The invisible playground",
+    "body": "Visit the hand-built corners of Cayuga just after sunrise. Photograph five carved faces without showing the object each face belongs to.",
+    "vibe": "photo",
+    "location": {
+      "name": "Cayuga Playground",
+      "neighborhood": "Outer Mission",
+      "lat": 37.71485,
+      "lng": -122.45039
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "sunrise"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_045",
+    "title": "The windy still life",
+    "body": "Bring three light objects to Candlestick Point on a windy afternoon. Arrange and photograph them before the wind changes the composition.",
+    "vibe": "photo",
+    "location": {
+      "name": "Candlestick Point",
+      "neighborhood": "Bayview",
+      "lat": 37.70972,
+      "lng": -122.38266
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "windy",
+      "afternoon"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_046",
+    "title": "The garage geometry",
+    "body": "Enter the public stairwell at the Fifth and Mission garage before the evening rush. Make three abstract photos without showing a car.",
+    "vibe": "photo",
+    "location": {
+      "name": "Fifth and Mission Garage",
+      "neighborhood": "SoMa",
+      "lat": 37.78331,
+      "lng": -122.40663
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "late_afternoon"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_047",
+    "title": "The single lit window",
+    "body": "Climb Ina Coolbrith after blue hour. Photograph one lit window across the city while keeping every nearer window dark.",
+    "vibe": "photo",
+    "location": {
+      "name": "Ina Coolbrith Park",
+      "neighborhood": "Russian Hill",
+      "lat": 37.79843,
+      "lng": -122.41328
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "blue_hour"
+    ],
+    "groupSize": "solo",
+    "weirdness": 3
+  },
+  {
+    "id": "q_048",
+    "title": "The tide erases it",
+    "body": "Draw a tiny shape at the edge of Ocean Beach during an incoming tide. Photograph it once per wave until it is gone.",
+    "vibe": "photo",
+    "location": {
+      "name": "Ocean Beach at Rivera",
+      "neighborhood": "Outer Sunset",
+      "lat": 37.74634,
+      "lng": -122.50778
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "incoming_tide",
+      "sunset"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_049",
+    "title": "The bakery's first mistake",
+    "body": "Arrive at a neighborhood bakery within fifteen minutes of opening. Ask what came out misshapen and take whatever they point to.",
+    "vibe": "food",
+    "location": {
+      "name": "John Campbell's Irish Bakery",
+      "neighborhood": "Outer Sunset",
+      "lat": 37.75392,
+      "lng": -122.49743
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_050",
+    "title": "The unlabeled soda",
+    "body": "Go to a corner store after 8 PM and choose a drink whose flavor you cannot identify from the label. Split it three ways and vote before looking it up.",
+    "vibe": "food",
+    "location": {
+      "name": "Samiramis Imports",
+      "neighborhood": "Mission",
+      "lat": 37.74246,
+      "lng": -122.42219
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "group",
+    "weirdness": 5
+  },
+  {
+    "id": "q_051",
+    "title": "The last dumpling rule",
+    "body": "Order one unfamiliar dumpling per person just before the lunch rush ends. Nobody can claim the last piece; settle it with rock-paper-scissors.",
+    "vibe": "food",
+    "location": {
+      "name": "House of Pancakes",
+      "neighborhood": "Taraval",
+      "lat": 37.74286,
+      "lng": -122.47844
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "late_lunch"
+    ],
+    "groupSize": "group",
+    "weirdness": 3
+  },
+  {
+    "id": "q_052",
+    "title": "The five-dollar picnic",
+    "body": "Each person gets five dollars at the Alemany market in its last hour. Build one shared picnic without buying the same color twice.",
+    "vibe": "food",
+    "location": {
+      "name": "Alemany Farmers Market",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.73543,
+      "lng": -122.40967
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "market_closing"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_053",
+    "title": "The pastry compass",
+    "body": "Buy one pastry you have never tried on a foggy morning. Walk in the direction its pointed end faces and eat it at the first bench.",
+    "vibe": "food",
+    "location": {
+      "name": "Pineapple King Bakery",
+      "neighborhood": "Outer Sunset",
+      "lat": 37.76396,
+      "lng": -122.47708
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "foggy",
+      "morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_054",
+    "title": "The menu blind spot",
+    "body": "At a family diner before 9 AM, order the breakfast item printed in the smallest type. Trade exactly one bite with your friend.",
+    "vibe": "food",
+    "location": {
+      "name": "Breakfast at Tiffany's",
+      "neighborhood": "Portola",
+      "lat": 37.72673,
+      "lng": -122.40377
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_055",
+    "title": "The bus-stop dessert",
+    "body": "Buy one cold dessert after sunset and eat it at the next bus shelter, even if no bus is coming. Rate only the shelter's ambiance.",
+    "vibe": "food",
+    "location": {
+      "name": "Marco Polo Italian Ice Cream",
+      "neighborhood": "Outer Sunset",
+      "lat": 37.74314,
+      "lng": -122.47857
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_056",
+    "title": "The mystery herb",
+    "body": "Visit a produce market in the final hour and buy the herb you recognize least. Smell it on the walk home and build dinner around it.",
+    "vibe": "food",
+    "location": {
+      "name": "Manila Oriental Market",
+      "neighborhood": "Excelsior",
+      "lat": 37.72536,
+      "lng": -122.43424
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "late_afternoon"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_057",
+    "title": "The warm tortilla timer",
+    "body": "Arrive at the tortilleria before noon and buy the smallest stack. Eat one plain before it stops steaming; save the rest for someone else.",
+    "vibe": "food",
+    "location": {
+      "name": "La Palma Mexicatessen",
+      "neighborhood": "Mission",
+      "lat": 37.75297,
+      "lng": -122.40943
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_058",
+    "title": "The one-block progressive dinner",
+    "body": "On one block after 6 PM, get a snack, a drink, and something sweet from three different counters. You cannot sit down between stops.",
+    "vibe": "food",
+    "location": {
+      "name": "San Bruno Avenue",
+      "neighborhood": "Portola",
+      "lat": 37.72927,
+      "lng": -122.40445
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "evening"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_059",
+    "title": "The off-menu color",
+    "body": "Ask for the brightest thing the kitchen can make without naming an ingredient. Share it, and guess the dominant flavor before anyone speaks to the server again.",
+    "vibe": "food",
+    "location": {
+      "name": "Tadu Ethiopian Kitchen",
+      "neighborhood": "Tenderloin",
+      "lat": 37.78383,
+      "lng": -122.41407
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "late_lunch"
+    ],
+    "groupSize": "group",
+    "weirdness": 5
+  },
+  {
+    "id": "q_060",
+    "title": "The bread-end rescue",
+    "body": "Visit a bakery thirty minutes before closing and ask whether any bread ends need a home. Take them to the nearest overlook with one good spread.",
+    "vibe": "food",
+    "location": {
+      "name": "Arizmendi Bakery",
+      "neighborhood": "Inner Sunset",
+      "lat": 37.76345,
+      "lng": -122.46616
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "before_closing"
+    ],
+    "groupSize": "pair",
+    "weirdness": 3
+  },
+  {
+    "id": "q_061",
+    "title": "The freezer-door oracle",
+    "body": "At a small market after 9 PM, let the foggiest freezer door choose your snack. Buy the first item visible when the glass clears.",
+    "vibe": "food",
+    "location": {
+      "name": "Duc Loi Supermarket",
+      "neighborhood": "Mission",
+      "lat": 37.756,
+      "lng": -122.41857
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_062",
+    "title": "The soup weather pact",
+    "body": "Wait for a day below 55 degrees, then order the soup with the fewest English words in its description. Eat it outside anyway.",
+    "vibe": "food",
+    "location": {
+      "name": "Yuanbao Jiaozi",
+      "neighborhood": "Outer Sunset",
+      "lat": 37.75396,
+      "lng": -122.49425
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "cold",
+      "lunch"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_063",
+    "title": "The two-neighborhood sandwich",
+    "body": "Buy bread on one side of Mission Street and the filling on the other before noon. Assemble the sandwich at Precita Park with no utensils.",
+    "vibe": "food",
+    "location": {
+      "name": "Mission Street at Cortland",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.74075,
+      "lng": -122.42306
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "morning"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_064",
+    "title": "The final tray bet",
+    "body": "Reach a dim sum bakery in the last hour. Each person silently points to the final item they think will sell out; split whichever one disappears first.",
+    "vibe": "food",
+    "location": {
+      "name": "Good Mong Kok Bakery",
+      "neighborhood": "Chinatown",
+      "lat": 37.79536,
+      "lng": -122.40822
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "late_afternoon"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_065",
+    "title": "The house with a second face",
+    "body": "Walk the Sunnyside side streets at dusk until you find a house that looks like a face. Give it a name, but do not photograph it.",
+    "vibe": "weird",
+    "location": {
+      "name": "Monterey Boulevard",
+      "neighborhood": "Sunnyside",
+      "lat": 37.73173,
+      "lng": -122.44313
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "dusk"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_066",
+    "title": "The public phone séance",
+    "body": "Find a surviving payphone after dark. Pick it up, listen for ten seconds, and leave a voicemail for your future self from your real phone.",
+    "vibe": "weird",
+    "location": {
+      "name": "Geneva Avenue Payphone",
+      "neighborhood": "Excelsior",
+      "lat": 37.71828,
+      "lng": -122.4402
+    },
+    "durationMin": 15,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_067",
+    "title": "The city's smallest parade",
+    "body": "Bring three objects that make different sounds to an empty block before 7 AM. March them from one corner to the next and stop when a window opens.",
+    "vibe": "weird",
+    "location": {
+      "name": "Egbert Avenue",
+      "neighborhood": "Bayview",
+      "lat": 37.71694,
+      "lng": -122.39291
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "group",
+    "weirdness": 5
+  },
+  {
+    "id": "q_068",
+    "title": "The wrong-way viewpoint",
+    "body": "Reach Grandview before sunset, then face the least impressive direction. Convince your friend it is the best view in the city.",
+    "vibe": "weird",
+    "location": {
+      "name": "Grandview Park East Slope",
+      "neighborhood": "Inner Sunset",
+      "lat": 37.75637,
+      "lng": -122.47195
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "sunset"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_069",
+    "title": "The anonymous monument",
+    "body": "Find a plaque in McLaren Park that neither person understands. Invent the event it commemorates and deliver a thirty-second speech.",
+    "vibe": "weird",
+    "location": {
+      "name": "McLaren Park",
+      "neighborhood": "Excelsior",
+      "lat": 37.7176,
+      "lng": -122.4197
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "afternoon"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_070",
+    "title": "The midnight chess problem",
+    "body": "Draw an eight-square chessboard in sidewalk chalk after 10 PM. Play a game using found objects and leave the losing king behind.",
+    "vibe": "weird",
+    "location": {
+      "name": "Precita Park",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.7473,
+      "lng": -122.41337
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_071",
+    "title": "The echo census",
+    "body": "Enter the pedestrian tunnel under Bosworth after the evening rush. Test five sounds and rank their echoes without using your voice.",
+    "vibe": "weird",
+    "location": {
+      "name": "Bosworth Pedestrian Tunnel",
+      "neighborhood": "Glen Park",
+      "lat": 37.73328,
+      "lng": -122.4342
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "evening"
+    ],
+    "groupSize": "group",
+    "weirdness": 5
+  },
+  {
+    "id": "q_072",
+    "title": "The borrowed constellation",
+    "body": "Lie on the grass at Holly Park after 9 PM. Connect five lit apartment windows into a constellation and name it after a group-chat joke.",
+    "vibe": "weird",
+    "location": {
+      "name": "Holly Park",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.73709,
+      "lng": -122.41727
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "night"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_073",
+    "title": "The staircase prophecy",
+    "body": "Climb the Farnsworth steps on a windy day. At each landing, write down the first word you hear; read the sentence only at the top.",
+    "vibe": "weird",
+    "location": {
+      "name": "Farnsworth Steps",
+      "neighborhood": "Forest Hill",
+      "lat": 37.7488,
+      "lng": -122.46408
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "windy"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_074",
+    "title": "The tiny door census",
+    "body": "Walk one block of Noe Valley just after sunrise and count every door too small for a person. Stop at seven, even if the block is unfinished.",
+    "vibe": "weird",
+    "location": {
+      "name": "Elizabeth Street",
+      "neighborhood": "Noe Valley",
+      "lat": 37.75241,
+      "lng": -122.43425
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "sunrise"
+    ],
+    "groupSize": "solo",
+    "weirdness": 4
+  },
+  {
+    "id": "q_075",
+    "title": "The fog exchange",
+    "body": "Bring a sealed note to Mount Davidson when the summit is hidden in fog. Trade notes with your friend without reading them until you are below the cloud.",
+    "vibe": "weird",
+    "location": {
+      "name": "Mount Davidson",
+      "neighborhood": "Miraloma Park",
+      "lat": 37.73822,
+      "lng": -122.45428
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "foggy"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_076",
+    "title": "The fence museum",
+    "body": "Choose a block in Bayview at midday and curate a five-piece museum made entirely of things caught in fences. Give the tour in a whisper.",
+    "vibe": "weird",
+    "location": {
+      "name": "Third Street at Quesada",
+      "neighborhood": "Bayview",
+      "lat": 37.73312,
+      "lng": -122.39027
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "midday"
+    ],
+    "groupSize": "pair",
+    "weirdness": 5
+  },
+  {
+    "id": "q_077",
+    "title": "The pigeon committee",
+    "body": "Sit near a quiet plaza at lunch and assign every pigeon a job title. Leave when the CEO flies away.",
+    "vibe": "weird",
+    "location": {
+      "name": "Persia Triangle",
+      "neighborhood": "Excelsior",
+      "lat": 37.72365,
+      "lng": -122.43516
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "lunch"
+    ],
+    "groupSize": "group",
+    "weirdness": 4
+  },
+  {
+    "id": "q_078",
+    "title": "The invisible boundary",
+    "body": "Walk from the Mission into Bernal at blue hour. Each person silently decides where the neighborhood changed; compare answers only after crossing Cortland.",
+    "vibe": "weird",
+    "location": {
+      "name": "Mission Street South",
+      "neighborhood": "Bernal Heights",
+      "lat": 37.74204,
+      "lng": -122.42161
+    },
+    "durationMin": 60,
+    "bestTime": [
+      "blue_hour"
+    ],
+    "groupSize": "pair",
+    "weirdness": 4
+  },
+  {
+    "id": "q_079",
+    "title": "The reverse time capsule",
+    "body": "Find something harmless on the sidewalk that looks ten years old. Write a note explaining today to it, photograph both, then take only the note home.",
+    "vibe": "weird",
+    "location": {
+      "name": "Visitacion Avenue",
+      "neighborhood": "Visitacion Valley",
+      "lat": 37.71338,
+      "lng": -122.40892
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "afternoon"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  },
+  {
+    "id": "q_080",
+    "title": "The one-person audience",
+    "body": "Go to the outdoor stage at Cayuga before 8 AM. Perform one minute of anything for exactly one carved wooden figure.",
+    "vibe": "weird",
+    "location": {
+      "name": "Cayuga Playground",
+      "neighborhood": "Outer Mission",
+      "lat": 37.71485,
+      "lng": -122.45039
+    },
+    "durationMin": 30,
+    "bestTime": [
+      "early_morning"
+    ],
+    "groupSize": "solo",
+    "weirdness": 5
+  }
+]
