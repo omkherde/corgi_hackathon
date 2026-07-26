@@ -37,9 +37,12 @@ a { text-decoration: none; }
 .location-row small { margin-bottom: 4px; color: var(--muted); font-size: .48rem; font-weight: 900; letter-spacing: .13em; }
 .location-row strong { font-size: .8rem; }
 .location-row em { font-size: 1.4rem; font-style: normal; }
-.profile-row { padding: 15px 0 10px; display: flex; align-items: center; gap: 10px; }
+.profile-row { width: 100%; padding: 15px 0 10px; display: grid; grid-template-columns: 38px 1fr auto; align-items: center; gap: 10px; background: transparent; text-align: left; cursor: pointer; }
 .user-avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: white; font-size: .66rem; font-weight: 900; }
+.profile-row strong, .profile-row small { display: block; }
 .profile-row strong { font-size: .8rem; }
+.profile-row small { margin-top: 3px; color: var(--muted); font-size: .5rem; }
+.profile-row em { color: var(--muted); font-size: 1.2rem; font-style: normal; }
 .contact-link { display: block; padding: 0; background: transparent; color: var(--muted); font-size: .58rem; font-weight: 700; text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .person-avatar { margin-right: -6px; background-color: #e7e0ce !important; background-image: url("/people/hackathon-avatars.png") !important; background-size: 400% 200% !important; }
 .large-person-avatar { width: 50px; height: 50px; border-radius: 50%; display: block; background-image: url("/people/hackathon-avatars.png"); background-size: 400% 200%; background-color: #e7e0ce; }
@@ -94,7 +97,8 @@ a { text-decoration: none; }
 .rail-section header button { background: transparent; color: var(--muted); font-size: .61rem; font-weight: 800; cursor: pointer; }
 .up-next-list { margin-top: 17px; display: grid; gap: 13px; }
 .up-next-list button { display: grid; grid-template-columns: 55px 1fr; align-items: center; gap: 11px; background: transparent; text-align: left; cursor: pointer; }
-.up-next-list img { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+.up-next-list img, .up-next-list .remote-thumb { width: 55px; height: 55px; border-radius: 10px; object-fit: cover; }
+.remote-thumb { display: block; background-color: #dddcd4; background-position: center; background-size: cover; }
 .up-next-list strong, .up-next-list small { display: block; }
 .up-next-list strong { font-family: Georgia, "Times New Roman", serif; font-size: .8rem; }
 .up-next-list small { margin-top: 3px; color: var(--muted); font-size: .57rem; }
@@ -129,6 +133,28 @@ a { text-decoration: none; }
 .ranking-view h2, .ranking-view p { margin: 0; }
 .ranking-view h2 { font-family: Georgia, serif; font-size: 1.25rem; }
 .ranking-view li p { margin-top: 4px; color: var(--muted); font-size: .65rem; }
+.profile-hero { margin-top: 34px; padding: 32px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 92px 1fr auto; align-items: center; gap: 22px; }
+.profile-monogram { width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: white; font-family: Georgia, serif; font-size: 1.8rem; }
+.profile-hero h1, .profile-hero p { margin: 0; }
+.profile-hero h1 { font-family: Georgia, serif; font-size: 2.6rem; font-weight: 500; letter-spacing: -.04em; }
+.profile-hero p { margin-top: 6px; color: var(--muted); font-size: .7rem; }
+.profile-hero button { padding: 11px 17px; border-radius: 22px; background: var(--lime); font-size: .65rem; font-weight: 900; cursor: pointer; }
+.profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+.profile-stats article { padding: 25px 0; border-right: 1px solid var(--line); }
+.profile-stats article + article { padding-left: 24px; }
+.profile-stats article:last-child { border-right: 0; }
+.profile-stats strong, .profile-stats span { display: block; }
+.profile-stats strong { font-family: Georgia, serif; font-size: 2rem; font-weight: 500; }
+.profile-stats span { margin-top: 4px; color: var(--muted); font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+.taste-card { margin-top: 28px; padding: 30px; border-radius: 18px; background: var(--lime); }
+.taste-card h2 { max-width: 700px; margin: 12px 0 22px; font-family: Georgia, serif; font-size: 2rem; font-weight: 500; line-height: 1.12; }
+.taste-card div { display: flex; flex-wrap: wrap; gap: 7px; }
+.taste-card div span { padding: 7px 10px; border: 1px solid rgba(21,23,16,.28); border-radius: 20px; font-size: .52rem; font-weight: 900; letter-spacing: .08em; }
+.profile-details { margin-top: 28px; border-top: 1px solid var(--line); }
+.profile-details > div { min-height: 58px; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 130px 1fr; align-items: center; }
+.profile-details span { color: var(--muted); font-size: .58rem; font-weight: 800; }
+.profile-details strong, .profile-details a { font-size: .7rem; }
+.profile-details a { text-decoration: underline; text-underline-offset: 3px; }
 .empty-state { min-height: 350px; display: grid; place-items: center; align-content: center; gap: 18px; text-align: center; }
 .empty-state h2 { max-width: 420px; font-family: Georgia, serif; font-size: 2rem; font-weight: 500; }
 .empty-state button, .modal-primary { min-height: 48px; padding: 0 22px; border-radius: 26px; background: var(--lime); font-weight: 900; cursor: pointer; }
@@ -151,7 +177,7 @@ a { text-decoration: none; }
 .search-modal > input { width: 100%; height: 52px; margin: 13px 0; padding: 0 15px; border: 1px solid var(--line); border-radius: 12px; font-size: .8rem; }
 .search-results { max-height: 440px; display: grid; gap: 1px; overflow: auto; background: var(--line); }
 .search-results button { min-height: 67px; padding: 8px; display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 12px; background: white; text-align: left; cursor: pointer; }
-.search-results img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
+.search-results img, .search-results .remote-thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
 .search-results strong, .search-results small { display: block; }
 .search-results strong { font-family: Georgia, serif; font-size: .8rem; }
 .search-results small { margin-top: 4px; color: var(--muted); font-size: .55rem; }
@@ -177,7 +203,7 @@ a { text-decoration: none; }
 .map-quest-strip { margin-top: 14px; padding-bottom: 5px; display: flex; gap: 8px; overflow-x: auto; }
 .map-quest-strip button { min-width: 190px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; display: grid; grid-template-columns: 52px 1fr; align-items: center; gap: 9px; background: white; text-align: left; cursor: pointer; }
 .map-quest-strip button.active { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
-.map-quest-strip img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
+.map-quest-strip img, .map-quest-strip .remote-thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
 .map-quest-strip strong, .map-quest-strip small { display: block; }
 .map-quest-strip strong { font-family: Georgia, serif; font-size: .67rem; }
 .map-quest-strip small { margin-top: 4px; color: var(--muted); font-size: .52rem; }
@@ -202,7 +228,9 @@ a { text-decoration: none; }
   .mobile-header { margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; }
   .mobile-header .wordmark { font-size: 1.2rem; }
   .mobile-header .wordmark > span { width: 32px; height: 32px; }
+  .mobile-header > div { display: flex; align-items: center; gap: 8px; }
   .mobile-location { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: transparent; color: var(--muted); font-size: .58rem; }
+  .mobile-profile { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: white; font-size: .55rem; font-weight: 900; }
   .workspace-header h1, .inner-view > h1 { font-size: clamp(2.7rem, 13vw, 4.2rem); }
   .search-button { width: 42px; height: 42px; }
   .squad-pill { max-width: 100%; }
@@ -223,6 +251,10 @@ a { text-decoration: none; }
   .collection-grid { grid-template-columns: 1fr; }
   .people-list { grid-template-columns: 1fr; }
   .map-frame { height: 58vh; min-height: 430px; }
+  .profile-hero { grid-template-columns: 68px 1fr; }
+  .profile-monogram { width: 68px; height: 68px; font-size: 1.3rem; }
+  .profile-hero h1 { font-size: 1.9rem; }
+  .profile-hero button { grid-column: 1 / -1; width: 100%; }
 }
 
 @media (max-width: 480px) {

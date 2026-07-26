@@ -7,9 +7,9 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import Image from "next/image";
 
 import quests from "@/data/quests.json";
+import photoCredits from "@/data/photo-credits.json";
 import { scoreQuests, type Coordinates } from "@/lib/scoring";
 import { loadUserState, saveUserState } from "@/lib/storage";
 import type { Quest, UserState } from "@/types";
@@ -81,20 +81,20 @@ const PHOTO_CREDITS: Record<string, string> = {
 
 const ALL_QUESTS = [...FEATURED, ...(quests as Quest[])];
 const PEOPLE = [
-  { name: "Daniel Garcia", role: "Demand at Merge", avatar: 0 },
-  { name: "Pritak Patel", role: "VP, Growth & Services at Merge", avatar: 1 },
-  { name: "Anamika Khaleghian", role: "Growth Engineer at Corgi", avatar: 2 },
-  { name: "Patrick Ruan", role: "Chief of Staff at Photon", avatar: 3 },
-  { name: "Dammy Adeoti", role: "Solutions Engineer at Merge", avatar: 4 },
-  { name: "Arthur Liou", role: "Solutions Architect at Merge", avatar: 5 },
-  { name: "Laura Dang", role: "Partnerships at Corgi", avatar: 6 },
-  { name: "Kushagra Bharti", role: "Software Engineer at Corgi", avatar: 7 },
+  { name: "Maya Chen", role: "Night walks and photo missions", avatar: 0 },
+  { name: "Theo Brooks", role: "Food quests and long detours", avatar: 1 },
+  { name: "Nina Alvarez", role: "Museums, murals, and good light", avatar: 2 },
+  { name: "Arjun Mehta", role: "Hills, views, and late coffee", avatar: 3 },
+  { name: "Riley Morgan", role: "Quiet corners and bookstores", avatar: 4 },
+  { name: "Eli Park", role: "Bike routes and hidden stairways", avatar: 5 },
+  { name: "Zara Cole", role: "Live music and neighborhood food", avatar: 6 },
+  { name: "Jon Bell", role: "Parks, architecture, and oddities", avatar: 7 },
 ];
-type View = "explore" | "saved" | "friends" | "ranking" | "map";
+type View = "explore" | "saved" | "friends" | "ranking" | "map" | "profile";
 type CompareState = { quest: Quest; lo: number; hi: number };
 
 function questImage(quest: Quest) {
-  return IMAGES[quest.id] || `/quests/generated/${quest.id}.svg`;
+  return IMAGES[quest.id] || (photoCredits as Record<string, { url: string }>)[quest.id]?.url;
 }
 
 const Icon = ({ children }: { children: React.ReactNode }) => (
@@ -124,7 +124,7 @@ export default function Home() {
   const [contactOpen, setContactOpen] = useState(false);
   const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
   const [mapQuest, setMapQuest] = useState<Quest>(FEATURED[0]);
-  const [squad, setSquad] = useState<string[]>(["Daniel Garcia", "Anamika Khaleghian", "Patrick Ruan"]);
+  const [squad, setSquad] = useState<string[]>(["Maya Chen", "Nina Alvarez", "Arjun Mehta"]);
   const pointerStart = useRef(0);
 
   useEffect(() => {
@@ -313,7 +313,7 @@ export default function Home() {
             <span><small>PLANNING FOR</small><strong>{squad.length ? `${squad.length} person squad` : "Just me"}</strong></span>
             <em>›</em>
           </button>
-          <div className="profile-row"><span className="user-avatar">OM</span><strong>Om</strong></div>
+          <button className="profile-row" onClick={() => setView("profile")}><span className="user-avatar">OM</span><span><strong>Om Kherde</strong><small>View profile</small></span><em>›</em></button>
           <button className="contact-link" onClick={() => setContactOpen(true)}>Contact the Detour team ↗</button>
         </div>
       </aside>
@@ -321,7 +321,7 @@ export default function Home() {
       <section className="workspace">
         <header className="mobile-header">
           <button className="wordmark" onClick={() => setView("explore")}><span>↗</span>detour</button>
-          <button className="mobile-location" onClick={requestLocation}>⌖ {locationLabel}</button>
+          <div><button className="mobile-location" onClick={requestLocation}>⌖ {locationLabel}</button><button className="mobile-profile" onClick={() => setView("profile")}>OM</button></div>
         </header>
         {view === "explore" && (
           <>
@@ -360,10 +360,10 @@ export default function Home() {
                       <div className="quest-place"><strong>{current.location.name}</strong><strong>{current.location.neighborhood}</strong></div>
                       <h2>{current.title}</h2>
                       <p>{current.body}</p>
-                      <a className="address-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${current.location.lat},${current.location.lng}`)}`} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">{current.location.address || current.location.name} ↗</a>
+                      <a className="address-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${current.location.lat},${current.location.lng}`)}`} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">{current.location.address || current.location.name} ↗</a>
                       <div className="quest-facts"><span>◷ {current.durationMin} min</span><span>▱ Free</span><span>{current.groupSize === "group" ? "2-5 people" : current.groupSize}</span></div>
                     </div>
-                    {IMAGES[current.id] ? <a className="photo-credit" href={PHOTO_CREDITS[current.id]} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Photo credit</a> : <span className="photo-credit">Original Detour illustration</span>}
+                    {IMAGES[current.id] ? <a className="photo-credit" href={PHOTO_CREDITS[current.id]} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Photo credit</a> : <a className="photo-credit" href={(photoCredits as Record<string, { source: string }>)[current.id]?.source} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Wikimedia Commons · {(photoCredits as Record<string, { license: string }>)[current.id]?.license}</a>}
                   </article>
                 </div>
                 <div className="deck-actions">
@@ -382,13 +382,14 @@ export default function Home() {
         {view === "friends" && <FriendsView squad={squad} onToggle={toggleSquadMember} />}
         {view === "ranking" && <RankingView quests={rankedQuests} onExplore={() => setView("explore")} />}
         {view === "map" && <MapView quest={mapQuest} quests={ALL_QUESTS} onQuest={setMapQuest} />}
+        {view === "profile" && <ProfileView saved={savedQuests.length} completed={user.completed.length} ranked={rankedQuests.length} onContact={() => setContactOpen(true)} />}
       </section>
 
       <aside className="right-rail">
         <section className="rail-section">
           <header><h2>Up next</h2><button onClick={() => setView("saved")}>See all</button></header>
           <div className="up-next-list">
-            {upNext.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><Image src={questImage(quest)} alt="" width={110} height={110} /><span><strong>{quest.title}</strong><small>{quest.location.neighborhood} · {quest.durationMin} min</small></span></button>)}
+            {upNext.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><strong>{quest.title}</strong><small>{quest.location.neighborhood} · {quest.durationMin} min</small></span></button>)}
           </div>
         </section>
         <section className="rail-section ranking-rail">
@@ -405,7 +406,7 @@ export default function Home() {
       {compare && comparisonQuest && <div className="modal-backdrop"><section className="modal-card"><p className="eyebrow">PLACE IT IN YOUR LIST</p><h2>Which was better?</h2><p>Your answer gives this quest an exact number.</p><button className="comparison-choice" onClick={() => answerComparison(true)}><small>NEW QUEST</small><strong>{compare.quest.title}</strong></button><span className="or">OR</span><button className="comparison-choice" onClick={() => answerComparison(false)}><small>CURRENTLY #{comparisonIndex + 1}</small><strong>{comparisonQuest.title}</strong></button></section></div>}
       {rankResult && <div className="modal-backdrop"><section className="modal-card result-card"><p className="eyebrow">RANKING UPDATED</p><strong className="result-number">#{rankResult.rank}</strong><h2>{rankResult.quest.title}</h2><button className="modal-primary" onClick={() => { setRankResult(null); setView("ranking"); }}>See full ranking</button><button className="modal-secondary" onClick={() => setRankResult(null)}>Keep exploring</button></section></div>}
       {shareOpen && current && <div className="modal-backdrop"><section className="modal-card share-modal"><button className="modal-close" onClick={() => setShareOpen(false)}>×</button><p className="eyebrow">SEND WITH PHOTON</p><h2>Send this quest.</h2><p>Enter a phone number with country code.</p><label htmlFor="recipient">Recipient</label><input id="recipient" value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="+1 415 555 0123" inputMode="tel" /><div className="message-preview"><small>DETOUR</small><strong>{current.title}</strong><span>{current.location.name}</span></div><button className="modal-primary" onClick={sendQuest} disabled={sending || !recipient.trim()}>{sending ? "Sending..." : "Send in iMessage"}</button></section></div>}
-      {searchOpen && <div className="modal-backdrop"><section className="modal-card search-modal"><button className="modal-close" onClick={() => setSearchOpen(false)}>×</button><p className="eyebrow">SEARCH ALL QUESTS</p><h2>Where to next?</h2><input autoFocus value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Place, neighborhood, or quest" /><div className="search-results">{searchResults.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><Image src={questImage(quest)} alt="" width={80} height={80} /><span><strong>{quest.title}</strong><small>{quest.location.address || quest.location.name}</small></span></button>)}</div></section></div>}
+      {searchOpen && <div className="modal-backdrop"><section className="modal-card search-modal"><button className="modal-close" onClick={() => setSearchOpen(false)}>×</button><p className="eyebrow">SEARCH ALL QUESTS</p><h2>Where to next?</h2><input autoFocus value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Place, neighborhood, or quest" /><div className="search-results">{searchResults.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><strong>{quest.title}</strong><small>{quest.location.address || quest.location.name}</small></span></button>)}</div></section></div>}
       {squadOpen && <div className="modal-backdrop"><section className="modal-card squad-modal"><button className="modal-close" onClick={() => setSquadOpen(false)}>×</button><p className="eyebrow">SIDEQUEST SQUAD</p><h2>Who is coming?</h2><p>Selections are saved on this device and change your planning group.</p><div className="people-list">{PEOPLE.map((person) => <button key={person.name} className={squad.includes(person.name) ? "selected" : ""} onClick={() => toggleSquadMember(person.name)}><span className={`large-person-avatar avatar-${person.avatar}`} /><span><strong>{person.name}</strong><small>{person.role}</small></span><b>{squad.includes(person.name) ? "✓" : "+"}</b></button>)}</div><button className="modal-primary" onClick={() => setSquadOpen(false)}>Plan for {squad.length || 1}</button></section></div>}
       {contactOpen && <div className="modal-backdrop"><section className="modal-card contact-modal"><button className="modal-close" onClick={() => setContactOpen(false)}>×</button><p className="eyebrow">CONTACT</p><h2>Build with us.</h2><a href="tel:+14694304138"><span>Phone</span><strong>(469) 430-4138</strong></a><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer"><span>GitHub</span><strong>omkherde/corgi_hackathon ↗</strong></a></section></div>}
       {notice && <div className="notice">{notice}</div>}
@@ -425,7 +426,11 @@ function RankingView({ quests: items, onExplore }: { quests: Quest[]; onExplore:
   return <section className="inner-view ranking-view"><p className="eyebrow">COMPLETED QUESTS</p><h1>Your ranking</h1><p className="view-subtitle">Every completed quest gets one concrete position.</p>{items.length ? <ol>{items.map((quest, index) => <li key={quest.id}><span>{index + 1}</span><div><h2>{quest.title}</h2><p>{quest.location.neighborhood} · {quest.vibe}</p></div></li>)}</ol> : <div className="empty-state"><h2>Your first ranking starts after your first quest.</h2><button onClick={onExplore}>Explore quests</button></div>}</section>;
 }
 
+function ProfileView({ saved, completed, ranked, onContact }: { saved: number; completed: number; ranked: number; onContact: () => void }) {
+  return <section className="inner-view profile-view"><p className="eyebrow">YOUR DETOUR PROFILE</p><div className="profile-hero"><div className="profile-monogram">OM</div><div><h1>Om Kherde</h1><p>San Francisco · Sidequest squad organizer</p></div><button onClick={onContact}>Contact</button></div><div className="profile-stats"><article><strong>{saved}</strong><span>Saved</span></article><article><strong>{completed}</strong><span>Completed</span></article><article><strong>{ranked}</strong><span>Ranked</span></article></div><section className="taste-card"><p className="eyebrow">CURRENT TASTE</p><h2>Night walks, strange landmarks, and food worth crossing town for.</h2><div><span>AFTER DARK</span><span>PHOTO MISSIONS</span><span>LOCAL FOOD</span></div></section><section className="profile-details"><div><span>Home base</span><strong>San Francisco, California</strong></div><div><span>Phone</span><a href="tel:+14694304138">(469) 430-4138</a></div><div><span>GitHub</span><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer">omkherde/corgi_hackathon ↗</a></div></section></section>;
+}
+
 function MapView({ quest, quests: items, onQuest }: { quest: Quest; quests: Quest[]; onQuest: (quest: Quest) => void }) {
   const bbox = `${quest.location.lng - 0.02}%2C${quest.location.lat - 0.015}%2C${quest.location.lng + 0.02}%2C${quest.location.lat + 0.015}`;
-  return <section className="inner-view map-view"><p className="eyebrow">QUEST MAP</p><h1>San Francisco, mapped.</h1><p className="view-subtitle">OpenStreetMap needs no API key. Select a place below to recenter the map.</p><div className="map-frame"><iframe title={`Map of ${quest.location.name}`} src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${quest.location.lat}%2C${quest.location.lng}`} loading="lazy" /><div className="map-card"><span>{quest.location.neighborhood}</span><h2>{quest.title}</h2><p>{quest.location.address || quest.location.name}</p><a href={`https://www.openstreetmap.org/?mlat=${quest.location.lat}&mlon=${quest.location.lng}#map=16/${quest.location.lat}/${quest.location.lng}`} target="_blank" rel="noreferrer">Open full map ↗</a></div></div><div className="map-quest-strip">{items.slice(0, 16).map((item) => <button key={item.id} className={item.id === quest.id ? "active" : ""} onClick={() => onQuest(item)}><Image src={questImage(item)} alt="" width={90} height={90} /><span><strong>{item.title}</strong><small>{item.location.neighborhood}</small></span></button>)}</div></section>;
+  return <section className="inner-view map-view"><p className="eyebrow">QUEST MAP</p><h1>San Francisco, mapped.</h1><p className="view-subtitle">OpenStreetMap needs no API key. Select a place below to recenter the map.</p><div className="map-frame"><iframe title={`Map of ${quest.location.name}`} src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${quest.location.lat}%2C${quest.location.lng}`} loading="lazy" /><div className="map-card"><span>{quest.location.neighborhood}</span><h2>{quest.title}</h2><p>{quest.location.address || quest.location.name}</p><a href={`https://www.openstreetmap.org/?mlat=${quest.location.lat}&mlon=${quest.location.lng}#map=16/${quest.location.lat}/${quest.location.lng}`} target="_blank" rel="noreferrer">Open full map ↗</a></div></div><div className="map-quest-strip">{items.slice(0, 16).map((item) => <button key={item.id} className={item.id === quest.id ? "active" : ""} onClick={() => onQuest(item)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(item)})` }} /><span><strong>{item.title}</strong><small>{item.location.neighborhood}</small></span></button>)}</div></section>;
 }
