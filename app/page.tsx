@@ -27,7 +27,8 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [tab, setTab] = useState<Tab>("discover");
   const [location, setLocation] = useState<Coordinates>(SF_FALLBACK);
-  const [usingFallback, setUsingFallback] = useState(true);
+  const [locationLabel, setLocationLabel] = useState("San Francisco fallback");
+  const [locating, setLocating] = useState(false);
   const [compare, setCompare] = useState<CompareState | null>(null);
   const [rankResult, setRankResult] = useState<RankResult | null>(null);
   const [personalizedCopy, setPersonalizedCopy] = useState({ questId: "", copy: "" });
@@ -37,6 +38,7 @@ export default function Home() {
   const [recipient, setRecipient] = useState("");
   const [dragX, setDragX] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const [swipeAnimating, setSwipeAnimating] = useState(false);
   const pointerStart = useRef(0);
 
   useEffect(() => {
@@ -45,17 +47,6 @@ export default function Home() {
       setRecipient(window.localStorage.getItem("detour:recipient") ?? "");
       setReady(true);
     });
-    navigator.geolocation?.getCurrentPosition(
-      ({ coords }) => {
-        setLocation({ lat: coords.latitude, lng: coords.longitude });
-        setUsingFallback(false);
-      },
-      () => {
-        setLocation(SF_FALLBACK);
-        setUsingFallback(true);
-      },
-      { timeout: 4000, maximumAge: 300_000 },
-    );
   }, []);
 
   useEffect(() => {
@@ -113,13 +104,15 @@ export default function Home() {
       swipes: { ...state.swipes, [current.id]: direction },
     }));
     setDragX(0);
+    setSwipeAnimating(false);
   }
 
   function swipeWithAnimation(direction: "yes" | "no") {
-    if (!current || Math.abs(dragX) > SWIPE_THRESHOLD) return;
+    if (!current || swipeAnimating) return;
     setDragging(false);
-    setDragX(direction === "yes" ? window.innerWidth : -window.innerWidth);
-    window.setTimeout(() => commitSwipe(direction), 180);
+    setSwipeAnimating(true);
+    setDragX(direction === "yes" ? window.innerWidth * 1.15 : -window.innerWidth * 1.15);
+    window.setTimeout(() => commitSwipe(direction), 380);
   }
 
   function handlePointerDown(event: ReactPointerEvent<HTMLElement>) {
@@ -138,10 +131,12 @@ export default function Home() {
     setDragging(false);
     if (dragX > SWIPE_THRESHOLD) {
       setDragX(window.innerWidth);
-      window.setTimeout(() => commitSwipe("yes"), 180);
+      setSwipeAnimating(true);
+      window.setTimeout(() => commitSwipe("yes"), 320);
     } else if (dragX < -SWIPE_THRESHOLD) {
       setDragX(-window.innerWidth);
-      window.setTimeout(() => commitSwipe("no"), 180);
+      setSwipeAnimating(true);
+      window.setTimeout(() => commitSwipe("no"), 320);
     } else {
       setDragX(0);
     }
@@ -192,6 +187,35 @@ export default function Home() {
     setShareOpen(true);
   }
 
+  function requestLocation() {
+    if (!navigator.geolocation || locating) return;
+    setLocating(true);
+    setLocationLabel("Requesting location…");
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const nextLocation = { lat: coords.latitude, lng: coords.longitude };
+        setLocation(nextLocation);
+        try {
+          const response = await fetch(
+            `/api/location?lat=${coords.latitude}&lng=${coords.longitude}`,
+          );
+          const data = (await response.json()) as { label?: string };
+          setLocationLabel(data.label || `${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}`);
+        } catch {
+          setLocationLabel(`${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}`);
+        } finally {
+          setLocating(false);
+        }
+      },
+      () => {
+        setLocation(SF_FALLBACK);
+        setLocationLabel("Location permission denied · using San Francisco");
+        setLocating(false);
+      },
+      { timeout: 7000, maximumAge: 300_000 },
+    );
+  }
+
   async function sendQuest() {
     if (!current || sending || !recipient.trim()) return;
     const normalizedRecipient = recipient.trim();
@@ -223,61 +247,95 @@ export default function Home() {
   if (!ready) return <main className="loading-shell">Finding your detour…</main>;
 
   return (
-    <main className="product-shell">
-      <header className="global-header">
-        <button className="brand" onClick={() => setTab("discover")}>
-          detour<span>.</span>
-        </button>
-        <div className="header-location">
-          <span className="status-dot" />
-          <div>
-            <strong>{usingFallback ? "San Francisco" : "Current location"}</strong>
-            <small>{usingFallback ? "Location fallback" : "Live location"}</small>
-          </div>
-        </div>
-        <nav className="desktop-nav" aria-label="Primary">
-          <button className={tab === "discover" ? "active" : ""} onClick={() => setTab("discover")}>
-            Discover
-          </button>
-          <button className={tab === "ranking" ? "active" : ""} onClick={() => setTab("ranking")}>
-            Ranking <span>{rankedQuests.length}</span>
-          </button>
+    <main className="site-shell">
+      <header className="site-header">
+        <a className="brand" href="#top">detour<span>.</span></a>
+        <nav aria-label="Site navigation">
+          <a href="#how">How it works</a>
+          <a href="#experience">Explore</a>
+          <a href="#ranking">Your ranking</a>
         </nav>
-        <button className="profile-button" onClick={() => setTab("ranking")}>OK</button>
+        <a className="header-cta" href="#experience">Open Detour</a>
       </header>
 
-      <div className="desktop-grid">
-        <aside className="context-panel">
-          <p className="section-label">Your signal</p>
-          <h1>Plans worth leaving the house for.</h1>
-          <p className="context-copy">
-            Specific local side quests, ordered by your actual taste—not anonymous ratings.
+      <section className="hero" id="top">
+        <div className="hero-copy">
+          <p className="hero-kicker">LOCAL DISCOVERY, RANKED BY TASTE</p>
+          <h1>Your best day in the city is not on a top-ten list.</h1>
+          <p>
+            Detour finds the specific, local things worth doing now—then learns
+            from what you actually loved.
           </p>
-          <dl className="profile-stats">
-            <div><dt>{user.completed.length}</dt><dd>completed</dd></div>
-            <div><dt>{Object.keys(user.swipes).length}</dt><dd>swiped</dd></div>
-            <div><dt>{rankedQuests.length ? rankedQuests[0].vibe : "—"}</dt><dd>top signal</dd></div>
-          </dl>
-          <div className="swipe-guide">
-            <p><span>←</span><strong>Pass</strong></p>
-            <p><strong>Save</strong><span>→</span></p>
+          <div className="hero-actions">
+            <a className="hero-primary" href="#experience">Explore nearby <span>↘</span></a>
+            <a className="hero-secondary" href="#how">See how it works</a>
           </div>
-        </aside>
+          <div className="hero-proof">
+            <div><strong>80</strong><span>curated SF quests</span></div>
+            <div><strong>3 taps</strong><span>to place a favorite</span></div>
+            <div><strong>1 list</strong><span>that gets more personal</span></div>
+          </div>
+        </div>
+        <div className="hero-visual" aria-label="Detour quest preview">
+          <div className="hero-orbit orbit-one" />
+          <div className="hero-orbit orbit-two" />
+          <div className="hero-card hero-card-back">
+            <span>02</span><strong>The fog exchange</strong>
+          </div>
+          <div className="hero-card hero-card-front">
+            <div className="hero-card-meta"><span>NEARBY</span><span>30 MIN</span></div>
+            <h2>The city looks different from here.</h2>
+            <p>Go before the first coffee run. Bring one person and leave your phones in your pockets until the view opens up.</p>
+            <div className="hero-card-place">⌖ Bernal Heights · 1.4 km</div>
+          </div>
+          <div className="hero-swipe-note">DRAG TO CHOOSE <span>→</span></div>
+        </div>
+      </section>
 
-        <section className={`discover-panel ${tab === "ranking" ? "mobile-hidden" : ""}`}>
-          <div className="panel-heading">
-            <div>
-              <p className="section-label">Recommended for you</p>
-              <h2>Pick your detour</h2>
+      <section className="editorial-strip">
+        <p>Built for the question</p>
+        <h2>“We have a few hours. What should we actually do?”</h2>
+      </section>
+
+      <section className="how-section" id="how">
+        <div className="section-intro">
+          <p className="section-label">A clearer way to decide</p>
+          <h2>From “maybe” to a plan in minutes.</h2>
+        </div>
+        <div className="steps-grid">
+          <article><span>01</span><h3>Discover</h3><p>Swipe through specific things to do near your actual location.</p></article>
+          <article><span>02</span><h3>Go</h3><p>Send the plan to iMessage and get out the door.</p></article>
+          <article><span>03</span><h3>Decide</h3><p>Compare completed quests head-to-head to build your definitive list.</p></article>
+        </div>
+      </section>
+
+      <section className="experience-section" id="experience">
+        <header className="experience-header">
+          <div>
+            <p className="section-label">Interactive preview</p>
+            <h2>Find your next detour.</h2>
+          </div>
+          <button className="location-button" onClick={requestLocation} disabled={locating}>
+            <span>⌖</span>
+            <div><small>SEARCHING NEAR</small><strong>{locationLabel}</strong></div>
+          </button>
+        </header>
+
+        <div className="experience-grid">
+          <section className={`discover-panel ${tab === "ranking" ? "mobile-hidden" : ""}`}>
+            <div className="panel-heading">
+              <div>
+                <p className="section-label">Recommended for you</p>
+                <h3>Choose with a swipe</h3>
+              </div>
+              <span className="deck-count">{deck.length} nearby</span>
             </div>
-            <span className="deck-count">{deck.length} nearby</span>
-          </div>
 
-          <div className="deck-stage">
+            <div className="deck-stage">
             {nextQuest && <div className="quest-card card-behind" aria-hidden="true" />}
             {current ? (
               <article
-                className={`quest-card card-active ${dragging ? "dragging" : ""}`}
+                className={`quest-card card-active ${dragging ? "dragging" : ""} ${swipeAnimating ? "animating-out" : ""}`}
                 style={{
                   transform: `translateX(${dragX}px) rotate(${dragX / 28}deg)`,
                   opacity: Math.max(0.25, 1 - Math.abs(dragX) / 520),
@@ -315,32 +373,36 @@ export default function Home() {
                 <button onClick={() => setUser(EMPTY_STATE)}>Reset deck</button>
               </div>
             )}
-          </div>
-
-          {current && (
-            <div className="card-actions">
-              <button className="action-circle pass-action" onClick={() => swipeWithAnimation("no")} aria-label="Pass">
-                ×
-              </button>
-              <button className="share-action" onClick={openShare}>
-                <span>Send to iMessage</span><b>↗</b>
-              </button>
-              <button className="action-circle complete-action" onClick={() => completeQuest(current)} aria-label="I did this">
-                ✓
-              </button>
             </div>
-          )}
-          <p className="gesture-hint">Drag left to pass · drag right to save · check to rank</p>
-        </section>
 
-        <aside className={`ranking-panel ${tab === "discover" ? "mobile-hidden-ranking" : ""}`}>
-          <div className="panel-heading">
-            <div>
-              <p className="section-label">Your definitive list</p>
-              <h2>Ranking</h2>
+            {current && (
+              <div className="card-actions">
+                <button className="action-circle pass-action" onClick={() => swipeWithAnimation("no")} aria-label="Previous recommendation">
+                  ←
+                </button>
+                <button className="share-action" onClick={openShare}>
+                  <span>Send to iMessage</span><b>↗</b>
+                </button>
+                <button className="action-circle save-action" onClick={() => swipeWithAnimation("yes")} aria-label="Next recommendation">
+                  →
+                </button>
+              </div>
+            )}
+            {current && (
+              <button className="completed-link" onClick={() => completeQuest(current)}>
+                Already did this? Add it to your ranking
+              </button>
+            )}
+          </section>
+
+          <aside className={`ranking-panel ${tab === "discover" ? "mobile-hidden-ranking" : ""}`} id="ranking">
+            <div className="panel-heading">
+              <div>
+                <p className="section-label">Completed quests</p>
+                <h3>Your ranking</h3>
+              </div>
+              <span className="rank-count">{rankedQuests.length}</span>
             </div>
-            <span className="rank-count">{rankedQuests.length}</span>
-          </div>
           {rankedQuests.length ? (
             <ol className="ranking-list">
               {rankedQuests.map((quest, index) => (
@@ -361,12 +423,15 @@ export default function Home() {
               <button onClick={() => setTab("discover")}>Find a quest</button>
             </div>
           )}
-          <div className="ranking-principle">
-            <span>01</span>
-            <p><strong>No stars. No averages.</strong><br />Every position comes from a decision you made.</p>
-          </div>
-        </aside>
-      </div>
+          </aside>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <a className="brand footer-brand" href="#top">detour<span>.</span></a>
+        <p>Do something worth ranking.</p>
+        <a href="#experience">Back to the deck ↑</a>
+      </footer>
 
       <nav className="mobile-nav" aria-label="Mobile navigation">
         <button className={tab === "discover" ? "active" : ""} onClick={() => setTab("discover")}>
