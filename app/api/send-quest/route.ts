@@ -68,8 +68,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, messageId });
   } catch (error) {
     console.error("Photon send failed", error);
+    const message = error instanceof Error ? error.message : "";
+    const targetNotAllowed = message.includes("Target not allowed");
     return NextResponse.json(
-      { error: "Photon could not send this quest. Try again." },
+      {
+        error: "Photon could not send this quest.",
+        detail: targetNotAllowed
+          ? "Photon blocked this recipient. Add the number to your project’s allowed targets, then try again."
+          : "Photon could not send this quest. Check the number and try again.",
+      },
       { status: 502 },
     );
   }

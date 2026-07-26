@@ -5,7 +5,7 @@ import type { Quest } from "@/types";
 export const runtime = "nodejs";
 
 const FALLBACK =
-  "Your list leans toward the quiet, oddly specific stuff. This one should fit.";
+  "Go when the timing is right, follow the constraint, and let the place surprise you.";
 
 type PersonalizeBody = {
   quest?: Partial<Quest>;
@@ -35,14 +35,16 @@ export async function POST(request: Request) {
 
   const history = (body.rankedQuests ?? []).filter(validQuest).slice(0, 8);
   if (history.length < 3 || !process.env.MERGE_GATEWAY_API_KEY?.trim()) {
-    return NextResponse.json({ copy: FALLBACK, personalized: false });
+    return NextResponse.json({ copy: body.quest.body || FALLBACK, personalized: false });
   }
 
   const prompt = [
-    "Write one sentence that introduces a side quest using this person's taste history.",
-    "Be specific and perceptive, not flattering. Never mention scores, algorithms, or ratings.",
-    "Use at most 22 words. Do not repeat the quest body. Return only the sentence.",
-    `Candidate: ${body.quest.title} — ${body.quest.body}`,
+    "Rewrite this side quest for one person using their ranked taste history.",
+    "Preserve the original place, time or condition, and the specific task or constraint.",
+    "Write in second-person imperative voice. Be perceptive, not flattering.",
+    "Use 1-2 sentences and at most 38 words. Never mention scores, algorithms, ratings, or their history.",
+    "Return only the rewritten quest body, with no introduction or quotation marks.",
+    `Original quest: ${body.quest.title} — ${body.quest.body}`,
     `Ranked best to worst:\n${history
       .map((quest, index) => `${index + 1}. ${quest.title} (${quest.vibe})`)
       .join("\n")}`,
@@ -83,6 +85,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ copy, personalized: true });
   } catch (error) {
     console.error("Personalization failed", error);
-    return NextResponse.json({ copy: FALLBACK, personalized: false });
+    return NextResponse.json({
+      copy: body.quest.body || FALLBACK,
+      personalized: false,
+    });
   }
 }
