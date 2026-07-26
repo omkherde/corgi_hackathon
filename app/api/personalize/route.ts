@@ -41,10 +41,13 @@ export async function POST(request: Request) {
   const prompt = [
     "Rewrite this side quest for one person using their ranked taste history.",
     "Preserve the original place, time or condition, and the specific task or constraint.",
+    "The ranked history is a style signal only. Never copy a title, place, activity, or phrase from it into the rewritten quest.",
     "Write in second-person imperative voice. Be perceptive, not flattering.",
     "Use 1-2 sentences and at most 38 words. Never mention scores, algorithms, ratings, or their history.",
     "Return only the rewritten quest body, with no introduction or quotation marks.",
-    `Original quest: ${body.quest.title} — ${body.quest.body}`,
+    `Candidate title: ${body.quest.title}`,
+    `Candidate place: ${body.quest.location?.name ?? "Use only the place in the original body."}`,
+    `Original body: ${body.quest.body}`,
     `Ranked best to worst:\n${history
       .map((quest, index) => `${index + 1}. ${quest.title} (${quest.vibe})`)
       .join("\n")}`,
