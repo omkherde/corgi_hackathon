@@ -82,33 +82,33 @@ const PHOTO_CREDITS: Record<string, string> = {
 const ALL_QUESTS = [...FEATURED, ...(quests as Quest[])];
 type UserQuest = Quest & { photos: string[]; createdBy: string };
 type SocialLinks = { instagram: string; linkedin: string; x: string; website: string };
-type Person = { name: string; role: string; company: string; kind: "host" | "judge"; avatar?: number };
+type Person = { name: string; role: string; company: string; kind: "host" | "judge"; avatar?: string };
 const HOSTS: Person[] = [
-  { name: "Daniel Garcia", role: "Demand", company: "Merge", kind: "host" },
-  { name: "Pritak Patel", role: "VP, Growth & Services", company: "Merge", kind: "host" },
-  { name: "Anamika Khaleghian", role: "Growth Engineer", company: "Corgi", kind: "host" },
-  { name: "Gabriel Enciso", role: "Startups", company: "Vercel", kind: "host" },
-  { name: "Ella Schlaghecke", role: "Partnerships", company: "Corgi", kind: "host" },
-  { name: "Lu Zhang", role: "Growth", company: "Corgi", kind: "host" },
-  { name: "Laura Dang", role: "Partnerships", company: "Corgi", kind: "host" },
-  { name: "Patrick Ruan", role: "Chief of Staff", company: "Photon", kind: "host" },
+  { name: "Daniel Garcia", role: "Demand", company: "Merge", kind: "host", avatar: "/people/hosts/daniel-garcia.jpg" },
+  { name: "Pritak Patel", role: "VP, Growth & Services", company: "Merge", kind: "host", avatar: "/people/hosts/pritak-patel.jpg" },
+  { name: "Anamika Khaleghian", role: "Growth Engineer", company: "Corgi", kind: "host", avatar: "/people/hosts/anamika-khaleghian.jpg" },
+  { name: "Gabriel Enciso", role: "Startups", company: "Vercel", kind: "host", avatar: "/people/hosts/gabriel-enciso.jpg" },
+  { name: "Ella Schlaghecke", role: "Partnerships", company: "Corgi", kind: "host", avatar: "/people/hosts/ella-schlaghecke.jpg" },
+  { name: "Lu Zhang", role: "Growth", company: "Corgi", kind: "host", avatar: "/people/hosts/lu-zhang.jpg" },
+  { name: "Laura Dang", role: "Partnerships", company: "Corgi", kind: "host", avatar: "/people/hosts/laura-dang.jpg" },
+  { name: "Patrick Ruan", role: "Chief of Staff", company: "Photon", kind: "host", avatar: "/people/hosts/patrick-ruan.jpg" },
 ];
 const JUDGES: Person[] = [
-  { name: "Dammy Adeoti", role: "Solutions Engineer", company: "Merge", kind: "judge", avatar: 0 },
-  { name: "Arther Liou", role: "Solutions Architect", company: "Merge", kind: "judge", avatar: 1 },
-  { name: "Aidan Timmerman", role: "Deployment Strategy & Partnerships", company: "Merge", kind: "judge", avatar: 2 },
-  { name: "Bill Jiao", role: "Co-founder", company: "General Instinct", kind: "judge", avatar: 3 },
-  { name: "Connor Thean Loi", role: "Founder", company: "Replicas", kind: "judge", avatar: 4 },
-  { name: "Saai Arora", role: "CTO", company: "Replicas", kind: "judge", avatar: 5 },
-  { name: "Sean Ethan Cole", role: "CEO", company: "Parasma", kind: "judge", avatar: 6 },
-  { name: "Guanming Wang", role: "Co-founder", company: "General Instinct", kind: "judge", avatar: 7 },
-  { name: "Leon Mojarrabi", role: "Co-founder", company: "GutGutGoose", kind: "judge", avatar: 8 },
-  { name: "Anis Mihrshahi", role: "Co-founder", company: "GutGutGoose", kind: "judge", avatar: 9 },
-  { name: "Marinos Eliades", role: "Co-founder", company: "Prized", kind: "judge", avatar: 10 },
-  { name: "Varun Nair", role: "New Media", company: "Robotics.co", kind: "judge", avatar: 11 },
-  { name: "Leo Yilu Fu", role: "Head Designer", company: "Corgi", kind: "judge", avatar: 12 },
-  { name: "Kushagra Bharti", role: "Software Engineer", company: "Corgi", kind: "judge", avatar: 13 },
-  { name: "Joseph Boyce", role: "GTM Lead", company: "Corgi", kind: "judge" },
+  { name: "Dammy Adeoti", role: "Solutions Engineer", company: "Merge", kind: "judge", avatar: "/people/judges/dammy-adeoti.jpg" },
+  { name: "Arther Liou", role: "Solutions Architect", company: "Merge", kind: "judge", avatar: "/people/judges/arther-liou.jpg" },
+  { name: "Aidan Timmerman", role: "Deployment Strategy & Partnerships", company: "Merge", kind: "judge", avatar: "/people/judges/aidan-timmerman.jpg" },
+  { name: "Bill Jiao", role: "Co-founder", company: "General Instinct", kind: "judge", avatar: "/people/judges/bill-jiao.jpg" },
+  { name: "Connor Thean Loi", role: "Founder", company: "Replicas", kind: "judge", avatar: "/people/judges/connor-thean-loi.jpg" },
+  { name: "Saai Arora", role: "CTO", company: "Replicas", kind: "judge", avatar: "/people/judges/saai-arora.jpg" },
+  { name: "Sean Ethan Cole", role: "CEO", company: "Parasma", kind: "judge", avatar: "/people/judges/sean-ethan-cole.jpg" },
+  { name: "Guanming Wang", role: "Co-founder", company: "General Instinct", kind: "judge", avatar: "/people/judges/guanming-wang.jpg" },
+  { name: "Leon Mojarrabi", role: "Co-founder", company: "GutGutGoose", kind: "judge", avatar: "/people/judges/leon-mojarrabi.jpg" },
+  { name: "Anis Mihrshahi", role: "Co-founder", company: "GutGutGoose", kind: "judge", avatar: "/people/judges/anis-mihrshahi.jpg" },
+  { name: "Marinos Eliades", role: "Co-founder", company: "Prized", kind: "judge", avatar: "/people/judges/marinos-eliades.jpg" },
+  { name: "Varun Nair", role: "New Media", company: "Robotics.co", kind: "judge", avatar: "/people/judges/varun-nair.jpg" },
+  { name: "Leo Yilu Fu", role: "Head Designer", company: "Corgi", kind: "judge", avatar: "/people/judges/leo-yilu-fu.jpg" },
+  { name: "Kushagra Bharti", role: "Software Engineer", company: "Corgi", kind: "judge", avatar: "/people/judges/kushagra-bharti.jpg" },
+  { name: "Joseph Boyce", role: "GTM Lead", company: "Corgi", kind: "judge", avatar: "/people/judges/joseph-boyce.jpg" },
 ];
 const PEOPLE = [...HOSTS, ...JUDGES];
 type View = "feed" | "explore" | "saved" | "friends" | "ranking" | "map" | "calendar" | "match" | "profile";
@@ -157,7 +157,7 @@ function PersonAvatar({ person, size = "md" }: { person: Person; size?: "sm" | "
   const initials = person.name.split(" ").map((part) => part[0]).slice(0, 2).join("");
   return person.avatar === undefined
     ? <span className={`identity-avatar identity-${size}`}>{initials}</span>
-    : <span className={`judge-avatar identity-${size}`} role="img" aria-label={`${person.name} profile photo`} style={{ backgroundImage: `url(/hackathon/judges/judge-${person.avatar}.png)` }} />;
+    : <span className={`judge-avatar identity-${size}`} role="img" aria-label={`${person.name} profile photo`} style={{ backgroundImage: `url(${person.avatar})` }} />;
 }
 
 function SquadAvatar({ seed, name, size = "md" }: { seed: string; name: string; size?: "sm" | "md" | "lg" }) {
