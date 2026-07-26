@@ -42,7 +42,7 @@ async function createPhotonClient(): Promise<PhotonClient> {
   return {
     async send(recipient, message) {
       const recipients = Array.isArray(recipient) ? recipient : [recipient];
-      const normalized = recipients.map((value) => value.trim()).filter(Boolean);
+      const normalized = recipients.map(normalizeTarget).filter(Boolean);
       if (normalized.length === 0) throw new Error("At least one recipient is required");
 
       const space = await provider.space.create(
@@ -53,6 +53,23 @@ async function createPhotonClient(): Promise<PhotonClient> {
     },
     stop: () => spectrum.stop(),
   };
+}
+
+function normalizeTarget(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (trimmed.includes("@")) return trimmed.toLowerCase();
+
+  const digits = trimmed.replace(/\D/g, "");
+  if (trimmed.startsWith("+") && digits.length >= 8 && digits.length <= 15) {
+    return `+${digits}`;
+  }
+  if (digits.length === 10) return `+1${digits}`;
+  if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+
+  throw new Error(
+    "Enter a valid phone number with country code, such as +1 415 555 0123.",
+  );
 }
 
 export function getPhotonClient(): Promise<PhotonClient> {
