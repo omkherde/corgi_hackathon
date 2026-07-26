@@ -81,6 +81,7 @@ const PHOTO_CREDITS: Record<string, string> = {
 
 const ALL_QUESTS = [...FEATURED, ...(quests as Quest[])];
 type UserQuest = Quest & { photos: string[]; createdBy: string };
+type SocialLinks = { instagram: string; linkedin: string; x: string; website: string };
 type Person = { name: string; role: string; company: string; kind: "host" | "judge"; avatar?: number };
 const HOSTS: Person[] = [
   { name: "Daniel Garcia", role: "Demand", company: "Merge", kind: "host" },
@@ -125,7 +126,7 @@ function questTraits(quest: Quest): QuestTraits {
   return { price, activity, energy };
 }
 
-type IconName = "feed" | "list" | "search" | "trophy" | "profile" | "friends" | "map" | "bell" | "calendar" | "menu" | "heart" | "comment" | "send" | "bookmark" | "plus" | "radar" | "bolt";
+type IconName = "feed" | "list" | "search" | "trophy" | "profile" | "friends" | "map" | "bell" | "calendar" | "menu" | "heart" | "comment" | "send" | "bookmark" | "plus" | "radar" | "bolt" | "instagram" | "linkedin" | "x";
 function AppIcon({ name, size = 22 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, React.ReactNode> = {
     feed: <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></>,
@@ -145,6 +146,9 @@ function AppIcon({ name, size = 22 }: { name: IconName; size?: number }) {
     plus: <path d="M12 5v14M5 12h14"/>,
     radar: <><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12 19 5"/><circle cx="12" cy="12" r="1"/></>,
     bolt: <path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/>,
+    instagram: <><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></>,
+    linkedin: <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 10v7M8 7v.1M12 17v-4a3 3 0 0 1 6 0v4M12 10v7"/></>,
+    x: <path d="M5 4 19 20M19 4 5 20"/>,
   };
   return <svg className="app-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -432,7 +436,7 @@ export default function Home() {
 
   const searchResults = appQuests.filter((quest) =>
     `${quest.title} ${quest.location.name} ${quest.location.neighborhood}`.toLowerCase().includes(searchQuery.toLowerCase()),
-  ).slice(0, 12);
+  ).slice(0, 40);
 
   if (!ready) return <main className="loading-shell">Loading Detour</main>;
 
@@ -466,7 +470,7 @@ export default function Home() {
           <button className="wordmark" onClick={() => setView("feed")}><span>↗</span>detour</button>
           <div className="mobile-top-actions"><button onClick={() => setView("calendar")} aria-label="Open planner"><AppIcon name="calendar" /></button><button className="notification-trigger" onClick={openNotifications} aria-label="Open notifications"><AppIcon name="bell" />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => setMenuOpen(true)} aria-label="Open menu"><AppIcon name="menu" /></button></div>
         </header>
-        {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id, "detour:liked-posts")} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id, "detour:bookmarked-posts")} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
+        {view === "feed" && <FeedView quests={appQuests.slice(0, 20)} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id, "detour:liked-posts")} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id, "detour:bookmarked-posts")} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
         {view === "explore" && (
           <>
             <header className="workspace-header">
@@ -527,7 +531,7 @@ export default function Home() {
         {view === "friends" && <FriendsView squad={squad} following={following} onToggle={toggleSquadMember} onFollow={toggleFollow} />}
         {view === "ranking" && <LeaderboardView people={PEOPLE} metric={leaderboardMetric} onMetric={setLeaderboardMetric} following={following} />}
         {view === "map" && <MapView quest={mapQuest} quests={appQuests} onQuest={setMapQuest} />}
-        {view === "calendar" && <PlannerView quests={savedQuests.length ? savedQuests : FEATURED} onQuest={openQuest} />}
+        {view === "calendar" && <PlannerView quests={savedQuests.length ? savedQuests : appQuests.slice(0, 16)} onQuest={openQuest} />}
         {view === "match" && <MatchmakingView location={location} locationLabel={locationLabel} hasPreciseLocation={hasPreciseLocation} locating={locating} following={following} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
         {view === "profile" && <ProfileView saved={savedQuests.length} completed={user.completed.length} ranked={rankedQuests.length} following={following.length} onContact={() => setContactOpen(true)} />}
       </section>
@@ -667,7 +671,11 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
   const [recommendationAsk, setRecommendationAsk] = useState("");
   const [recommendationSent, setRecommendationSent] = useState(false);
   const postPeople = [people[2], people[4], people[7]];
-  const feedItems = feedMode === "Nearby" ? [items[0], items[2], items[1]] : feedMode === "Friends" ? [items[1], items[0], items[2]] : [items[2], items[0], items[1]];
+  const feedItems = feedMode === "Nearby"
+    ? [items[4], items[8], items[12]]
+    : feedMode === "Friends"
+      ? [items[5], items[9], items[13]]
+      : [items[6], items[10], items[14]];
   useEffect(() => {
     queueMicrotask(() => {
       const savedComments = window.localStorage.getItem("detour:feed-comments");
@@ -709,8 +717,8 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
     <header className="feed-header"><div><p className="eyebrow">SATURDAY IN SAN FRANCISCO</p><h1>Find the good part.</h1></div><button className="feed-search" onClick={onSearch}><AppIcon name="search" /><span>Search quests, people, lists</span></button></header>
     <div className="discovery-tabs">{(["Nearby", "Trending", "Friends"] as const).map((mode) => <button key={mode} className={feedMode === mode ? "active" : ""} onClick={() => { setFeedMode(mode); if (mode === "Nearby") onLocate(); }}>{mode === "Nearby" ? "⌖" : mode === "Trending" ? "↗" : "♙"} {mode === "Friends" ? "Friend recs" : mode}</button>)}</div>
     <section className="invite-banner"><div><p className="eyebrow">SIDEQUEST SQUAD</p><h2>Bring the group with you.</h2><span>Share rankings, trade recommendations, and build tonight&apos;s plan together.</span></div><div className="invite-benefits"><span><AppIcon name="trophy" size={18} />Shared rankings</span><span><AppIcon name="send" size={18} />Quest sharing</span><span><AppIcon name="friends" size={18} />Squad planning</span></div><button onClick={onInvite}>Invite friends</button></section>
-    <section className="featured-lists"><header><div><p className="eyebrow">FEATURED LISTS</p><h2>Made for tonight</h2></div><button onClick={onSearch}>See all</button></header><div className="featured-list-track">{items.slice(0, 3).map((quest, index) => <button key={quest.id} onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `linear-gradient(180deg, transparent 30%, rgba(0,0,0,.8)), url(${questImage(quest)})` }}><span>0 / {index + 6} COMPLETE</span><strong>{index === 0 ? "After-dark San Francisco" : index === 1 ? "Worth crossing town for" : "Photo missions for two"}</strong><small>{quest.location.neighborhood} and nearby</small></button>)}</div></section>
-    <section className="friend-suggestions"><header><div><p className="eyebrow">PEOPLE IN THE ROOM</p><h2>Follow the hackathon crew</h2></div><button onClick={onFriends}>View everyone</button></header><div>{people.filter((person) => !hiddenPeople.includes(person.name)).slice(0, 4).map((person) => <article key={person.name}><button className="dismiss-person" onClick={() => setHiddenPeople([...hiddenPeople, person.name])} aria-label={`Dismiss ${person.name}`}>×</button><PersonAvatar person={person} size="lg" /><strong>{person.name}</strong><small>{person.company}</small><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}</div></section>
+    <section className="featured-lists"><header><div><p className="eyebrow">FEATURED LISTS</p><h2>Made for tonight</h2></div><button onClick={onSearch}>See all</button></header><div className="featured-list-track">{[items[0], items[7], items[15]].filter(Boolean).map((quest, index) => <button key={quest.id} onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `linear-gradient(180deg, transparent 30%, rgba(0,0,0,.8)), url(${questImage(quest)})` }}><span>0 / {index + 6} COMPLETE</span><strong>{index === 0 ? "After-dark San Francisco" : index === 1 ? "Worth crossing town for" : "Photo missions for two"}</strong><small>{quest.location.neighborhood} and nearby</small></button>)}</div></section>
+    <section className="friend-suggestions"><header><div><p className="eyebrow">DETOUR COMMUNITY</p><h2>People worth following</h2></div><button onClick={onFriends}>View everyone</button></header><div>{people.filter((person) => !hiddenPeople.includes(person.name)).slice(0, 4).map((person) => <article key={person.name}><button className="dismiss-person" onClick={() => setHiddenPeople([...hiddenPeople, person.name])} aria-label={`Dismiss ${person.name}`}>×</button><PersonAvatar person={person} size="lg" /><strong>{person.name}</strong><small>{person.company}</small><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}</div></section>
     <form className="ask-friends" onSubmit={(event) => { event.preventDefault(); void askFriends(); }}><span className="profile-monogram">OM</span><label><span>{recommendationSent ? "Recommendation request shared" : "Ask your friends for a recommendation"}</span><input value={recommendationAsk} onChange={(event) => { setRecommendationAsk(event.target.value); setRecommendationSent(false); }} placeholder="Late-night food near Chinatown?" /></label><button disabled={!recommendationAsk.trim()} aria-label="Share recommendation request"><AppIcon name="send" /></button></form>
     <header className="feed-section-title"><p className="eyebrow">YOUR FEED</p><h2>{feedMode === "Friends" ? "What your crew saved" : feedMode === "Nearby" ? "Happening near you" : "Trending with builders"}</h2></header>
     <div className="social-feed">{feedItems.filter(Boolean).map((quest, index) => {
@@ -739,8 +747,36 @@ function ListsView({ saved, completed, customLists, onQuest, onNewList }: { save
 
 function FriendsView({ squad, following, onToggle, onFollow }: { squad: string[]; following: string[]; onToggle: (name: string) => void; onFollow: (name: string) => void }) {
   const [crew, setCrew] = useState<"Judges" | "Hosts">("Judges");
+  const [editing, setEditing] = useState<Person | null>(null);
+  const [socials, setSocials] = useState<Record<string, SocialLinks>>({});
+  const [draft, setDraft] = useState<SocialLinks>({ instagram: "", linkedin: "", x: "", website: "" });
   const people = crew === "Judges" ? JUDGES : HOSTS;
-  return <section className="inner-view friends-view"><p className="eyebrow">YC SUS HACKATHON</p><h1>People in the room</h1><p className="view-subtitle">Follow their Detours or add them to tonight&apos;s planning squad.</p><div className="crew-tabs"><button className={crew === "Judges" ? "active" : ""} onClick={() => setCrew("Judges")}>Judges · {JUDGES.length}</button><button className={crew === "Hosts" ? "active" : ""} onClick={() => setCrew("Hosts")}>Hosts · {HOSTS.length}</button></div><div className="crew-avatar-strip">{people.map((person) => <button key={person.name} onClick={() => onToggle(person.name)} className={squad.includes(person.name) ? "active" : ""}><PersonAvatar person={person} /><span>{person.name.split(" ")[0]}</span></button>)}</div><div className="friends-grid">{people.map((person) => <article key={person.name}><PersonAvatar person={person} size="lg" /><div><h2>{person.name}</h2><p>{person.role} · {person.company}</p><small>{squad.includes(person.name) ? "In your Sidequest squad" : "Hackathon crew"}</small></div><div className="friend-actions"><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button><button className={squad.includes(person.name) ? "in-squad" : ""} onClick={() => onToggle(person.name)}>{squad.includes(person.name) ? "✓" : "+"}</button></div></article>)}</div></section>;
+  useEffect(() => {
+    queueMicrotask(() => setSocials(JSON.parse(window.localStorage.getItem("detour:people-socials") || "{}") as Record<string, SocialLinks>));
+  }, []);
+  function editSocials(person: Person) {
+    setEditing(person);
+    setDraft(socials[person.name] || { instagram: "", linkedin: "", x: "", website: "" });
+  }
+  function saveSocials(event: React.FormEvent) {
+    event.preventDefault();
+    if (!editing) return;
+    const clean = Object.fromEntries(Object.entries(draft).map(([key, value]) => {
+      const candidate = value.trim();
+      if (!candidate) return [key, ""];
+      try {
+        const parsed = new URL(candidate);
+        return [key, parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.toString() : ""];
+      } catch {
+        return [key, ""];
+      }
+    })) as SocialLinks;
+    const next = { ...socials, [editing.name]: clean };
+    setSocials(next);
+    window.localStorage.setItem("detour:people-socials", JSON.stringify(next));
+    setEditing(null);
+  }
+  return <><section className="inner-view friends-view"><p className="eyebrow">DETOUR COMMUNITY</p><h1>People worth knowing.</h1><p className="view-subtitle">Follow their Detours, save their social profiles, or add them to your next squad.</p><div className="crew-tabs"><button className={crew === "Judges" ? "active" : ""} onClick={() => setCrew("Judges")}>Judges · {JUDGES.length}</button><button className={crew === "Hosts" ? "active" : ""} onClick={() => setCrew("Hosts")}>Hosts · {HOSTS.length}</button></div><div className="crew-avatar-strip">{people.map((person) => <button key={person.name} onClick={() => onToggle(person.name)} className={squad.includes(person.name) ? "active" : ""}><PersonAvatar person={person} /><span>{person.name.split(" ")[0]}</span></button>)}</div><div className="friends-grid">{people.map((person) => { const links = socials[person.name]; const hasLinks = links && Object.values(links).some(Boolean); return <article key={person.name}><PersonAvatar person={person} size="lg" /><div><h2>{person.name}</h2><p>{person.role} · {person.company}</p><small>{squad.includes(person.name) ? "In your Sidequest squad" : "Detour community"}</small><div className="person-socials">{hasLinks && links.instagram && <a href={links.instagram} target="_blank" rel="noreferrer" aria-label={`${person.name} on Instagram`}><AppIcon name="instagram" size={16} /></a>}{hasLinks && links.linkedin && <a href={links.linkedin} target="_blank" rel="noreferrer" aria-label={`${person.name} on LinkedIn`}><AppIcon name="linkedin" size={16} /></a>}{hasLinks && links.x && <a href={links.x} target="_blank" rel="noreferrer" aria-label={`${person.name} on X`}><AppIcon name="x" size={15} /></a>}{hasLinks && links.website && <a href={links.website} target="_blank" rel="noreferrer" aria-label={`${person.name} website`}>↗</a>}<button onClick={() => editSocials(person)}>{hasLinks ? "Edit links" : "Add social links"}</button></div></div><div className="friend-actions"><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button><button className={squad.includes(person.name) ? "in-squad" : ""} onClick={() => onToggle(person.name)} aria-label={`${squad.includes(person.name) ? "Remove" : "Add"} ${person.name} ${squad.includes(person.name) ? "from" : "to"} squad`}>{squad.includes(person.name) ? "✓" : "+"}</button></div></article>; })}</div></section>{editing && <div className="modal-backdrop" onClick={() => setEditing(null)}><form className="modal-card social-modal" onSubmit={saveSocials} onClick={(event) => event.stopPropagation()}><button type="button" className="modal-close" onClick={() => setEditing(null)}>×</button><p className="eyebrow">SOCIAL PROFILES</p><h2>{editing.name}</h2><p>Paste verified profile URLs.</p>{(["instagram", "linkedin", "x", "website"] as const).map((network) => <label key={network}><span>{network === "x" ? "X" : network[0].toUpperCase() + network.slice(1)}</span><input type="url" inputMode="url" placeholder={`https://${network === "x" ? "x.com" : network + ".com"}/…`} value={draft[network]} onChange={(event) => setDraft({ ...draft, [network]: event.target.value })} /></label>)}<button className="modal-primary">Save social links</button></form></div>}</>;
 }
 
 function LeaderboardView({ people, metric, onMetric, following }: { people: Person[]; metric: "Been" | "Influence" | "Notes" | "Photos"; onMetric: (metric: "Been" | "Influence" | "Notes" | "Photos") => void; following: string[] }) {
@@ -748,7 +784,7 @@ function LeaderboardView({ people, metric, onMetric, following }: { people: Pers
   const [city, setCity] = useState<"San Francisco" | "All cities">("San Francisco");
   const filtered = scope === "Following" && following.length ? people.filter((person) => following.includes(person.name)) : people;
   const multipliers = { Been: 17, Influence: 9, Notes: 13, Photos: 21 };
-  return <section className="inner-view leaderboard-view"><p className="eyebrow">THE ROOM, RANKED</p><h1>Leaderboard</h1><div className="leader-tabs">{(["Been", "Influence", "Notes", "Photos"] as const).map((item) => <button key={item} className={metric === item ? "active" : ""} onClick={() => onMetric(item)}>{item}</button>)}</div><p className="leader-description">{metric === "Been" ? "Number of completed quests" : metric === "Influence" ? "Saves inspired across the community" : metric === "Notes" ? "Useful notes shared with friends" : "Original quest photos added"}</p><div className="leader-filters"><button onClick={() => setScope(scope === "All members" ? "Following" : "All members")}>{scope}⌄</button><button onClick={() => setCity(city === "San Francisco" ? "All cities" : "San Francisco")}>{city}⌄</button></div><ol>{filtered.slice(0, city === "San Francisco" ? 15 : 10).map((person, index) => <li key={person.name}><span>{index + 1}</span><PersonAvatar person={person} /><div><strong>{person.name}</strong><small>{person.company}</small></div><b>{Math.max(9, (filtered.length - index) * multipliers[metric] + (index % 3) * 4)}</b></li>)}</ol></section>;
+  return <section className="inner-view leaderboard-view"><p className="eyebrow">COMMUNITY RANKINGS</p><h1>Leaderboard</h1><div className="leader-tabs">{(["Been", "Influence", "Notes", "Photos"] as const).map((item) => <button key={item} className={metric === item ? "active" : ""} onClick={() => onMetric(item)}>{item}</button>)}</div><p className="leader-description">{metric === "Been" ? "Number of completed quests" : metric === "Influence" ? "Saves inspired across the community" : metric === "Notes" ? "Useful notes shared with friends" : "Original quest photos added"}</p><div className="leader-filters"><button onClick={() => setScope(scope === "All members" ? "Following" : "All members")}>{scope}⌄</button><button onClick={() => setCity(city === "San Francisco" ? "All cities" : "San Francisco")}>{city}⌄</button></div><ol>{filtered.slice(0, city === "San Francisco" ? 15 : 10).map((person, index) => <li key={person.name}><span>{index + 1}</span><PersonAvatar person={person} /><div><strong>{person.name}</strong><small>{person.company}</small></div><b>{Math.max(9, (filtered.length - index) * multipliers[metric] + (index % 3) * 4)}</b></li>)}</ol></section>;
 }
 
 function NotificationsPanel({ people, following, onFollow, onClose }: { people: Person[]; following: string[]; onFollow: (name: string) => void; onClose: () => void }) {
