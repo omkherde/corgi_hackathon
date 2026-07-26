@@ -109,14 +109,22 @@ const JUDGES: Person[] = [
   { name: "Joseph Boyce", role: "GTM Lead", company: "Corgi", kind: "judge" },
 ];
 const PEOPLE = [...HOSTS, ...JUDGES];
-type View = "feed" | "explore" | "saved" | "friends" | "ranking" | "map" | "calendar" | "profile";
+type View = "feed" | "explore" | "saved" | "friends" | "ranking" | "map" | "calendar" | "match" | "profile";
 type CompareState = { quest: Quest; lo: number; hi: number };
 
 function questImage(quest: Quest) {
   return IMAGES[quest.id] || (photoCredits as Record<string, { url: string }>)[quest.id]?.url;
 }
 
-type IconName = "feed" | "list" | "search" | "trophy" | "profile" | "friends" | "map" | "bell" | "calendar" | "menu" | "heart" | "comment" | "send" | "bookmark" | "plus";
+type QuestTraits = { price: "Free" | "$" | "$$"; activity: string; energy: "Chill" | "Social" | "Active" };
+function questTraits(quest: Quest): QuestTraits {
+  const price = quest.vibe === "food" ? "$$" : quest.vibe === "weird" && quest.weirdness > 3 ? "$" : "Free";
+  const activity = quest.vibe === "active" ? "Outdoors" : quest.vibe === "chill" ? "Slow down" : quest.vibe === "photo" ? "Creative" : quest.vibe === "food" ? "Food run" : "Wildcard";
+  const energy = quest.vibe === "active" ? "Active" : quest.groupSize === "group" || quest.vibe === "food" ? "Social" : "Chill";
+  return { price, activity, energy };
+}
+
+type IconName = "feed" | "list" | "search" | "trophy" | "profile" | "friends" | "map" | "bell" | "calendar" | "menu" | "heart" | "comment" | "send" | "bookmark" | "plus" | "radar" | "bolt";
 function AppIcon({ name, size = 22 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, React.ReactNode> = {
     feed: <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></>,
@@ -134,6 +142,8 @@ function AppIcon({ name, size = 22 }: { name: IconName; size?: number }) {
     send: <><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></>,
     bookmark: <path d="M6 3h12v19l-6-4-6 4V3Z"/>,
     plus: <path d="M12 5v14M5 12h14"/>,
+    radar: <><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12 19 5"/><circle cx="12" cy="12" r="1"/></>,
+    bolt: <path d="m13 2-9 12h7l-1 8 9-12h-7l1-8Z"/>,
   };
   return <svg className="app-icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -152,6 +162,7 @@ export default function Home() {
   const [location, setLocation] = useState<Coordinates>(SF);
   const [locationLabel, setLocationLabel] = useState("San Francisco");
   const [locating, setLocating] = useState(false);
+  const [hasPreciseLocation, setHasPreciseLocation] = useState(false);
   const [filter, setFilter] = useState("For tonight");
   const [compare, setCompare] = useState<CompareState | null>(null);
   const [rankResult, setRankResult] = useState<{ quest: Quest; rank: number } | null>(null);
@@ -299,6 +310,7 @@ export default function Home() {
       async ({ coords }) => {
         const next = { lat: coords.latitude, lng: coords.longitude };
         setLocation(next);
+        setHasPreciseLocation(true);
         try {
           const response = await fetch(`/api/location?lat=${coords.latitude}&lng=${coords.longitude}`);
           const data = await response.json() as { label?: string };
@@ -405,6 +417,7 @@ export default function Home() {
           <button className={view === "explore" ? "active" : ""} onClick={() => setView("explore")}><AppIcon name="search" />Explore</button>
           <button className={view === "ranking" ? "active" : ""} onClick={() => setView("ranking")}><AppIcon name="trophy" />Leaderboard</button>
           <button className={view === "friends" ? "active" : ""} onClick={() => setView("friends")}><AppIcon name="friends" />Friends</button>
+          <button className={view === "match" ? "active" : ""} onClick={() => setView("match")}><AppIcon name="radar" />Squad Match</button>
           <button className={view === "map" ? "active" : ""} onClick={() => setView("map")}><AppIcon name="map" />Map</button>
         </nav>
         <div className="left-footer">
@@ -462,7 +475,7 @@ export default function Home() {
                       <h2>{current.title}</h2>
                       <p>{current.body}</p>
                       <a className="address-link" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${current.location.lat},${current.location.lng}`)}`} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">{current.location.address || current.location.name} ↗</a>
-                      <div className="quest-facts"><span>◷ {current.durationMin} min</span><span>▱ Free</span><span>{current.groupSize === "group" ? "2-5 people" : current.groupSize}</span></div>
+                      <div className="quest-facts"><span>◷ {current.durationMin} min</span><span>▱ {questTraits(current).price}</span><span>{questTraits(current).activity}</span><span>{questTraits(current).energy}</span><span>{current.groupSize === "group" ? "2-5 people" : current.groupSize}</span></div>
                     </div>
                     {IMAGES[current.id] ? <a className="photo-credit" href={PHOTO_CREDITS[current.id]} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Photo credit</a> : <a className="photo-credit" href={(photoCredits as Record<string, { source: string }>)[current.id]?.source} onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Wikimedia Commons · {(photoCredits as Record<string, { license: string }>)[current.id]?.license}</a>}
                   </article>
@@ -484,7 +497,8 @@ export default function Home() {
         {view === "ranking" && <LeaderboardView people={PEOPLE} metric={leaderboardMetric} onMetric={setLeaderboardMetric} following={following} />}
         {view === "map" && <MapView quest={mapQuest} quests={ALL_QUESTS} onQuest={setMapQuest} />}
         {view === "calendar" && <PlannerView quests={savedQuests.length ? savedQuests : FEATURED} onQuest={openQuest} />}
-        {view === "profile" && <ProfileView saved={savedQuests.length} completed={user.completed.length} ranked={rankedQuests.length} onContact={() => setContactOpen(true)} />}
+        {view === "match" && <MatchmakingView location={location} locationLabel={locationLabel} hasPreciseLocation={hasPreciseLocation} locating={locating} following={following} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
+        {view === "profile" && <ProfileView saved={savedQuests.length} completed={user.completed.length} ranked={rankedQuests.length} following={following.length} onContact={() => setContactOpen(true)} />}
       </section>
 
       <aside className="right-rail">
@@ -522,7 +536,7 @@ export default function Home() {
       {contactOpen && <div className="modal-backdrop"><section className="modal-card contact-modal"><button className="modal-close" onClick={() => setContactOpen(false)}>×</button><p className="eyebrow">CONTACT</p><h2>Build with us.</h2><a href="tel:+14694304138"><span>Phone</span><strong>(469) 430-4138</strong></a><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer"><span>GitHub</span><strong>omkherde/corgi_hackathon ↗</strong></a></section></div>}
       {notificationsOpen && <NotificationsPanel people={PEOPLE.slice(0, 8)} following={following} onFollow={toggleFollow} onClose={() => setNotificationsOpen(false)} />}
       {listOpen && <div className="modal-backdrop"><form className="modal-card create-list-modal" onSubmit={(event) => { event.preventDefault(); createList(); }}><button type="button" className="modal-close" onClick={() => setListOpen(false)}>×</button><p className="eyebrow">NEW LIST</p><h2>Give this list a name.</h2><input autoFocus value={listName} onChange={(event) => setListName(event.target.value)} placeholder="Late-night SF" /><button className="modal-primary" disabled={!listName.trim()}>Create list</button></form></div>}
-      {menuOpen && <div className="modal-backdrop"><section className="modal-card app-menu"><button className="modal-close" onClick={() => setMenuOpen(false)}>×</button><p className="eyebrow">DETOUR MENU</p><h2>Where to?</h2><button onClick={() => { setView("friends"); setMenuOpen(false); }}><AppIcon name="friends" /><span><strong>Friends</strong><small>Hackathon hosts and judges</small></span></button><button onClick={() => { setView("map"); setMenuOpen(false); }}><AppIcon name="map" /><span><strong>Map</strong><small>All nearby quests</small></span></button><button onClick={() => { setView("calendar"); setMenuOpen(false); }}><AppIcon name="calendar" /><span><strong>Planner</strong><small>Your saved week</small></span></button><button onClick={() => { setContactOpen(true); setMenuOpen(false); }}><AppIcon name="profile" /><span><strong>Contact</strong><small>Phone and GitHub</small></span></button></section></div>}
+      {menuOpen && <div className="modal-backdrop"><section className="modal-card app-menu"><button className="modal-close" onClick={() => setMenuOpen(false)}>×</button><p className="eyebrow">DETOUR MENU</p><h2>Where to?</h2><button onClick={() => { setView("friends"); setMenuOpen(false); }}><AppIcon name="friends" /><span><strong>Friends</strong><small>Hackathon hosts and judges</small></span></button><button onClick={() => { setView("match"); setMenuOpen(false); }}><AppIcon name="radar" /><span><strong>Squad Match</strong><small>Queue with people nearby</small></span></button><button onClick={() => { setView("map"); setMenuOpen(false); }}><AppIcon name="map" /><span><strong>Map</strong><small>All nearby quests</small></span></button><button onClick={() => { setView("calendar"); setMenuOpen(false); }}><AppIcon name="calendar" /><span><strong>Planner</strong><small>Your saved week</small></span></button><button onClick={() => { setContactOpen(true); setMenuOpen(false); }}><AppIcon name="profile" /><span><strong>Contact</strong><small>Phone and GitHub</small></span></button></section></div>}
       {inviteOpen && <div className="modal-backdrop"><section className="modal-card invite-modal"><button className="modal-close" onClick={() => setInviteOpen(false)}>×</button><p className="eyebrow">GROW THE SQUAD</p><h2>Detours are better together.</h2><p>Invite a friend to share quests, compare rankings, and plan a night out.</p><div className="invite-code"><span>YOUR INVITE LINK</span><strong>corgi-hackathon-pink.vercel.app</strong></div><button className="modal-primary" onClick={() => void inviteFriends()}>{inviteCopied ? "Copied to clipboard" : "Invite friends"}</button></section></div>}
       {notice && <div className="notice">{notice}</div>}
     </main>
@@ -571,7 +585,7 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
       return <article className="feed-post" key={quest.id}>
         <header><PersonAvatar person={person} /><div><strong>{person.name} <span>{index === 1 ? "saved" : "ranked"} {quest.title}</span></strong><small>{quest.location.neighborhood} · {index + 1}h</small></div><span className="feed-score">{[9.2, 8.7, 8.4][index]}</span></header>
         <button className="feed-photo" onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `url(${questImage(quest)})` }}><span>{quest.vibe}</span></button>
-        <div className="feed-post-copy"><h3>{quest.title}</h3><a href={`https://www.google.com/maps/search/?api=1&query=${quest.location.lat},${quest.location.lng}`} target="_blank" rel="noreferrer">{quest.location.address} ↗</a><p><b>Notes:</b> {index === 0 ? "The path looks completely different after the fog settles. Go before the late crowd and bring one person." : index === 1 ? "Exactly the kind of place you almost walk past. The small constraint made the whole stop memorable." : "Best at the edge of blue hour. The view works, but the challenge is what made this worth saving."}</p></div>
+        <div className="feed-post-copy"><h3>{quest.title}</h3><div className="feed-tags"><span>{questTraits(quest).price}</span><span>{questTraits(quest).activity}</span><span>{questTraits(quest).energy}</span><span>{quest.durationMin} min</span></div><a href={`https://www.google.com/maps/search/?api=1&query=${quest.location.lat},${quest.location.lng}`} target="_blank" rel="noreferrer">{quest.location.address} ↗</a><p><b>Notes:</b> {index === 0 ? "The path looks completely different after the fog settles. Go before the late crowd and bring one person." : index === 1 ? "Exactly the kind of place you almost walk past. The small constraint made the whole stop memorable." : "Best at the edge of blue hour. The view works, but the challenge is what made this worth saving."}</p></div>
         <footer><div><button className={isLiked ? "active" : ""} onClick={() => onLike(index)} aria-label="Like"><AppIcon name="heart" /><span>{12 + index * 7 + (isLiked ? 1 : 0)}</span></button><button onClick={() => setCommentPost(commentPost === index ? null : index)} aria-label="Comment"><AppIcon name="comment" /><span>{3 + index}</span></button><button onClick={() => void shareQuest(quest)} aria-label="Share"><AppIcon name="send" /></button></div><button className={isBookmarked ? "active" : ""} onClick={() => onBookmark(index)} aria-label="Bookmark"><AppIcon name="bookmark" /></button></footer>
         {commentPost === index && <form className="comment-box" onSubmit={(event) => { event.preventDefault(); setComment(""); setCommentPost(null); }}><input autoFocus value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Add a note for the crew" /><button disabled={!comment.trim()}>Post</button></form>}
       </article>;
@@ -606,9 +620,108 @@ function NotificationsPanel({ people, following, onFollow, onClose }: { people: 
   return <div className="notification-backdrop" onClick={onClose}><aside className="notifications-panel" onClick={(event) => event.stopPropagation()}><header><button onClick={onClose}>←</button><h2>Notifications</h2><span /></header><p className="eyebrow">NEW</p><div>{people.map((person, index) => <article key={person.name}><PersonAvatar person={person} /><p><strong>{person.name}</strong><span>{index % 3 === 0 ? " saved a quest from your list" : index % 3 === 1 ? " just joined Detour" : " started following you"}</span><small>{index + 1}{index < 2 ? "h" : "d"}</small></p><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : index % 3 === 2 ? "Follow back" : "Follow"}</button></article>)}</div></aside></div>;
 }
 
-function ProfileView({ saved, completed, ranked, onContact }: { saved: number; completed: number; ranked: number; onContact: () => void }) {
+function ProfileView({ saved, completed, ranked, following, onContact }: { saved: number; completed: number; ranked: number; following: number; onContact: () => void }) {
   const [tab, setTab] = useState<"Activity" | "Lists" | "Photos" | "Info">("Activity");
-  return <section className="inner-view profile-view"><p className="eyebrow">YOUR DETOUR PROFILE</p><div className="profile-hero"><div className="profile-monogram">OM</div><div><h1>Om Kherde</h1><p>San Francisco · Sidequest squad organizer</p></div><button onClick={onContact}>Contact</button></div><div className="profile-stats"><article><strong>{saved}</strong><span>Saved</span></article><article><strong>{completed}</strong><span>Completed</span></article><article><strong>{ranked}</strong><span>Ranked</span></article></div><div className="profile-tabs">{(["Activity", "Lists", "Photos", "Info"] as const).map((item) => <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>)}</div>{tab === "Activity" && <section className="taste-card"><p className="eyebrow">CURRENT TASTE</p><h2>Night walks, strange landmarks, and food worth crossing town for.</h2><div><span>AFTER DARK</span><span>PHOTO MISSIONS</span><span>LOCAL FOOD</span></div></section>}{tab === "Lists" && <div className="profile-panel"><h2>Three lists in rotation</h2><p>For tonight · Sidequest squad · SF essentials</p></div>}{tab === "Photos" && <div className="profile-photo-grid">{FEATURED.slice(0, 3).map((quest) => <span key={quest.id} style={{ backgroundImage: `url(${questImage(quest)})` }} />)}</div>}{tab === "Info" && <section className="profile-details"><div><span>Home base</span><strong>San Francisco, California</strong></div><div><span>Phone</span><a href="tel:+14694304138">(469) 430-4138</a></div><div><span>GitHub</span><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer">omkherde/corgi_hackathon ↗</a></div></section>}</section>;
+  const xp = completed * 250 + saved * 40 + following * 25;
+  const level = Math.floor(xp / 500) + 1;
+  const progress = xp % 500;
+  return <section className="inner-view profile-view"><p className="eyebrow">YOUR DETOUR PROFILE</p><div className="profile-hero"><div className="profile-monogram">OM</div><div><h1>Om Kherde</h1><p>San Francisco · Level {level} city scout</p></div><button onClick={onContact}>Contact</button></div><section className="level-card"><div><span className="level-orb"><AppIcon name="bolt" />{level}</span><div><p className="eyebrow">CITY SCOUT LEVEL {level}</p><h2>{completed < 3 ? "Getting off the map." : completed < 8 ? "Neighborhood regular." : "Local legend."}</h2></div><strong>{xp} XP</strong></div><i><em style={{ width: `${(progress / 500) * 100}%` }} /></i><small>{500 - progress} XP to level {level + 1}</small></section><div className="profile-stats"><article><strong>{completed}</strong><span>Sidequests</span></article><article><strong>{saved}</strong><span>Saved</span></article><article><strong>{ranked}</strong><span>Ranked</span></article></div><div className="profile-tabs">{(["Activity", "Lists", "Photos", "Info"] as const).map((item) => <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>)}</div>{tab === "Activity" && <><section className="taste-card"><p className="eyebrow">CURRENT TASTE</p><h2>Night walks, strange landmarks, and food worth crossing town for.</h2><div><span>AFTER DARK</span><span>PHOTO MISSIONS</span><span>LOCAL FOOD</span></div></section><section className="achievement-grid"><article className={completed >= 1 ? "unlocked" : ""}><AppIcon name="map" /><strong>First detour</strong><small>Complete one sidequest</small></article><article className={completed >= 3 ? "unlocked" : ""}><AppIcon name="friends" /><strong>Outside person</strong><small>Complete three sidequests</small></article><article className={completed >= 8 ? "unlocked" : ""}><AppIcon name="trophy" /><strong>City folklore</strong><small>Complete eight sidequests</small></article></section></>}{tab === "Lists" && <div className="profile-panel"><h2>Three lists in rotation</h2><p>For tonight · Sidequest squad · SF essentials</p></div>}{tab === "Photos" && <div className="profile-photo-grid">{FEATURED.slice(0, 3).map((quest) => <span key={quest.id} style={{ backgroundImage: `url(${questImage(quest)})` }} />)}</div>}{tab === "Info" && <section className="profile-details"><div><span>Home base</span><strong>San Francisco, California</strong></div><div><span>Phone</span><a href="tel:+14694304138">(469) 430-4138</a></div><div><span>GitHub</span><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer">omkherde/corgi_hackathon ↗</a></div></section>}</section>;
+}
+
+type NearbyPlayer = { id: string; name: string; distanceMiles: number; mode: "open" | "friends"; joinedAt: number };
+type SquadRequest = { id: string; name: string; createdAt: number };
+function MatchmakingView({ location, locationLabel, hasPreciseLocation, locating, following, onLocate, onInvite }: { location: Coordinates; locationLabel: string; hasPreciseLocation: boolean; locating: boolean; following: string[]; onLocate: () => void; onInvite: () => void }) {
+  const [radius, setRadius] = useState(1);
+  const [mode, setMode] = useState<"open" | "friends">("open");
+  const [active, setActive] = useState(false);
+  const [nearby, setNearby] = useState<NearbyPlayer[]>([]);
+  const [requests, setRequests] = useState<SquadRequest[]>([]);
+  const [match, setMatch] = useState<{ id: string; name: string } | null>(null);
+  const [nickname, setNickname] = useState("Om");
+  const [status, setStatus] = useState("");
+  const session = useRef("");
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      session.current = window.localStorage.getItem("detour:match-session") || crypto.randomUUID();
+      window.localStorage.setItem("detour:match-session", session.current);
+      setNickname(window.localStorage.getItem("detour:match-name") || "Om");
+    });
+  }, []);
+
+  async function updateQueue(action: "join" | "leave" | "list" | "request" | "accept", targetId?: string) {
+    if (!session.current) return;
+    setStatus(action === "join" ? "Joining the queue..." : status);
+    try {
+      const response = await fetch("/api/matchmaking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, targetId, sessionId: session.current, name: nickname.trim() || "Detour user", lat: location.lat, lng: location.lng, radiusMiles: radius, mode, allowedNames: following }),
+      });
+      const data = await response.json() as { nearby?: NearbyPlayer[]; requests?: SquadRequest[]; match?: { id: string; name: string }; requested?: boolean; error?: string };
+      if (!response.ok) throw new Error(data.error || "Matchmaking is unavailable");
+      if (data.nearby) setNearby(data.nearby);
+      if (data.requests) setRequests(data.requests);
+      if (data.match) {
+        setMatch(data.match);
+        setStatus(`Squad formed with ${data.match.name}.`);
+      }
+      if (data.requested) setStatus("Squad request sent. You will match when they accept.");
+      if (action === "join") {
+        setActive(true);
+        setStatus("You are discoverable for 30 minutes.");
+        window.localStorage.setItem("detour:match-name", nickname.trim() || "Detour user");
+      } else if (action === "leave") {
+        setActive(false);
+        setNearby([]);
+        setRequests([]);
+        setMatch(null);
+        setStatus("You left the queue.");
+      }
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Matchmaking is unavailable");
+    }
+  }
+
+  useEffect(() => {
+    if (!active) return;
+    const timer = window.setInterval(() => void updateQueue("join"), 20000);
+    return () => window.clearInterval(timer);
+  });
+
+  return <section className="inner-view match-view">
+    <p className="eyebrow">PROXIMITY MATCHMAKING</p><h1>Fill the squad.</h1>
+    <p className="view-subtitle">Opt in for 30 minutes and find other Detour users who are ready to go now. Exact locations are never shown.</p>
+    <div className="match-layout"><section className="match-control"><div className={`radar-visual ${active ? "active" : ""}`}><i /><i /><i /><span><AppIcon name="radar" size={34} /></span>{nearby.slice(0, 3).map((player, index) => <b key={player.id} className={`ping ping-${index + 1}`} title={player.name} />)}</div><div className="match-status"><span className={hasPreciseLocation ? "ready" : ""}>{hasPreciseLocation ? "LOCATION READY" : "LOCATION REQUIRED"}</span><strong>{hasPreciseLocation ? locationLabel : "Share your location to set a real radius"}</strong></div>{!hasPreciseLocation ? <button className="match-primary" onClick={onLocate} disabled={locating}>{locating ? "Finding you..." : "Use my location"}</button> : active ? <button className="match-secondary" onClick={() => void updateQueue("leave")}>Leave queue</button> : <button className="match-primary" onClick={() => void updateQueue("join")}>Find my squad</button>}<small className="privacy-note">Your coordinates are held temporarily in memory and expire automatically. Other users only receive an approximate distance.</small></section><section className="match-settings"><label><span>DISPLAY NAME</span><input value={nickname} onChange={(event) => setNickname(event.target.value)} maxLength={24} disabled={active} /></label><div><span className="setting-label">WHO CAN MATCH</span><div className="segmented">{(["open", "friends"] as const).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)} disabled={active}>{item === "open" ? "Open squad" : "Friends only"}</button>)}</div></div><div><span className="setting-label">SEARCH RADIUS</span><div className="radius-options">{[1, 3, 5].map((miles) => <button key={miles} className={radius === miles ? "active" : ""} onClick={() => setRadius(miles)} disabled={active}>{miles} mi</button>)}</div></div><p className="queue-copy">{mode === "open" ? "Open squad lets you match with any opted-in Detour user nearby." : `Friends only limits results to the ${following.length} people you follow.`}</p><button className="invite-known" onClick={onInvite}><AppIcon name="friends" />Invite friends instead</button></section></div>
+    <section className="nearby-queue"><header><div><p className="eyebrow">QUEUE</p><h2>{active ? `${nearby.length} nearby ${nearby.length === 1 ? "person" : "people"}` : "Not discoverable yet"}</h2></div>{active && <button onClick={() => void updateQueue("list")}>Refresh</button>}</header>{match && <div className="formed-squad"><span className="identity-avatar identity-md">{match.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><small>SQUAD FORMED</small><strong>You matched with {match.name}</strong></div><AppIcon name="bolt" /></div>}{requests.length > 0 && <div className="squad-requests"><p className="eyebrow">REQUESTS</p>{requests.map((request) => <article key={request.id}><span className="identity-avatar identity-md">{request.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><strong>{request.name}</strong><small>Wants to queue up with you</small></div><button onClick={() => void updateQueue("accept", request.id)}>Accept</button></article>)}</div>}{active && nearby.length > 0 ? <div>{nearby.map((player) => <article key={player.id}><span className="identity-avatar identity-md">{player.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><strong>{player.name}</strong><small>{player.distanceMiles < .1 ? "Less than 0.1 mi away" : `${player.distanceMiles.toFixed(1)} mi away`} · Ready now</small></div><button onClick={() => void updateQueue("request", player.id)}>Queue up</button></article>)}</div> : !match && <div className="queue-empty"><AppIcon name="radar" size={30} /><p>{active ? "No opted-in users are in your radius yet. Keep the queue open or invite your friends." : "Choose your radius and go discoverable when you are ready."}</p></div>}{status && <p className="match-message">{status}</p>}</section>
+  </section>;
+}
+
+function calendarDate(dayOffset: number, hour = 19) {
+  const date = new Date();
+  date.setDate(date.getDate() + dayOffset);
+  date.setHours(hour, 0, 0, 0);
+  return date;
+}
+
+function exportQuestCalendar(quest: Quest, dayOffset: number) {
+  const start = calendarDate(dayOffset);
+  const end = new Date(start.getTime() + quest.durationMin * 60000);
+  const stamp = (date: Date) => date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const escape = (value: string) => value.replace(/\\/g, "\\\\").replace(/,/g, "\\,").replace(/;/g, "\\;").replace(/\n/g, "\\n");
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Detour//Sidequest//EN", "BEGIN:VEVENT", `UID:${quest.id}-${start.getTime()}@detour`, `DTSTAMP:${stamp(new Date())}`, `DTSTART:${stamp(start)}`, `DTEND:${stamp(end)}`, `SUMMARY:${escape(quest.title)}`, `DESCRIPTION:${escape(quest.body)}`, `LOCATION:${escape(quest.location.address || quest.location.name)}`, `GEO:${quest.location.lat};${quest.location.lng}`, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  link.download = `${quest.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.ics`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function handoffQuestEvent(quest: Quest, platform: "Luma" | "Partiful") {
+  const details = `${quest.title}\n${quest.body}\n${quest.location.address || quest.location.name}\n${quest.durationMin} minutes`;
+  const url = platform === "Luma" ? "https://luma.com/home" : "https://partiful.com/";
+  window.open(url, "_blank", "noopener,noreferrer");
+  void navigator.clipboard.writeText(details);
 }
 
 function PlannerView({ quests: items, onQuest }: { quests: Quest[]; onQuest: (quest: Quest) => void }) {
@@ -649,10 +762,10 @@ function PlannerView({ quests: items, onQuest }: { quests: Quest[]; onQuest: (qu
     })}</div>
     {selectedQuest ? <article className="planned-quest">
       <button className="planned-photo" onClick={() => onQuest(selectedQuest)} style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(0,0,0,.72)), url(${questImage(selectedQuest)})` }}><span>{selectedQuest.location.neighborhood}</span><strong>{selectedQuest.title}</strong></button>
-      <div><p className="eyebrow">{selectedDay.toUpperCase()}</p><h2>{selectedQuest.title}</h2><p>{selectedQuest.durationMin} minutes · {selectedQuest.location.name}</p><div><button onClick={() => onQuest(selectedQuest)}>View quest</button><button onClick={() => updateSchedule(selectedDay)}>Remove</button></div></div>
+      <div><p className="eyebrow">{selectedDay.toUpperCase()}</p><h2>{selectedQuest.title}</h2><p>{selectedQuest.durationMin} minutes · {selectedQuest.location.name}</p><div className="planned-tags"><span>{questTraits(selectedQuest).price}</span><span>{questTraits(selectedQuest).activity}</span><span>{questTraits(selectedQuest).energy}</span></div><div className="planned-actions"><button onClick={() => onQuest(selectedQuest)}>View quest</button><button onClick={() => exportQuestCalendar(selectedQuest, days.indexOf(selectedDay))}>Add to calendar</button><button onClick={() => updateSchedule(selectedDay)}>Remove</button></div><div className="event-handoffs"><span>CREATE AN EVENT</span><button onClick={() => handoffQuestEvent(selectedQuest, "Luma")}>Luma ↗</button><button onClick={() => handoffQuestEvent(selectedQuest, "Partiful")}>Partiful ↗</button><small>Quest details are copied for pasting.</small></div></div>
     </article> : <section className="planner-empty"><AppIcon name="calendar" /><div><h2>{selectedDay} is open.</h2><p>Choose a quest below and make it official.</p></div></section>}
     <header className="planner-heading"><h2>Ideas for {selectedDay.toLowerCase()}</h2><span>{available.length} nearby</span></header>
-    <div className="planner-options">{available.slice(0, 8).map((quest) => <button key={quest.id} className={schedule[selectedDay] === quest.id ? "selected" : ""} onClick={() => updateSchedule(selectedDay, quest.id)}><span style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><small>{quest.location.neighborhood}</small><strong>{quest.title}</strong><em>{quest.durationMin} min</em></span><b>{schedule[selectedDay] === quest.id ? "✓" : "+"}</b></button>)}</div>
+    <div className="planner-options">{available.slice(0, 8).map((quest) => <button key={quest.id} className={schedule[selectedDay] === quest.id ? "selected" : ""} onClick={() => updateSchedule(selectedDay, quest.id)}><span style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><small>{quest.location.neighborhood}</small><strong>{quest.title}</strong><em>{quest.durationMin} min · {questTraits(quest).price} · {questTraits(quest).energy}</em></span><b>{schedule[selectedDay] === quest.id ? "✓" : "+"}</b></button>)}</div>
   </section>;
 }
 
