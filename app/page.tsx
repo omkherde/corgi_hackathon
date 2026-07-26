@@ -109,7 +109,7 @@ const JUDGES: Person[] = [
   { name: "Joseph Boyce", role: "GTM Lead", company: "Corgi", kind: "judge" },
 ];
 const PEOPLE = [...HOSTS, ...JUDGES];
-type View = "feed" | "explore" | "saved" | "friends" | "ranking" | "map" | "profile";
+type View = "feed" | "explore" | "saved" | "friends" | "ranking" | "map" | "calendar" | "profile";
 type CompareState = { quest: Quest; lo: number; hi: number };
 
 function questImage(quest: Quest) {
@@ -177,6 +177,8 @@ export default function Home() {
   const [listOpen, setListOpen] = useState(false);
   const [listName, setListName] = useState("");
   const [customLists, setCustomLists] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [unread, setUnread] = useState(6);
   const pointerStart = useRef(0);
 
   useEffect(() => {
@@ -363,6 +365,11 @@ export default function Home() {
     setListOpen(false);
   }
 
+  function openNotifications() {
+    setUnread(0);
+    setNotificationsOpen(true);
+  }
+
   function openQuest(quest: Quest) {
     setSelectedQuest(quest);
     setSearchOpen(false);
@@ -401,7 +408,7 @@ export default function Home() {
       <section className="workspace">
         <header className="mobile-header">
           <button className="wordmark" onClick={() => setView("feed")}><span>↗</span>detour</button>
-          <div className="mobile-top-actions"><button onClick={() => setView("map")} aria-label="Open map"><AppIcon name="calendar" /></button><button className="notification-trigger" onClick={() => setNotificationsOpen(true)} aria-label="Open notifications"><AppIcon name="bell" /><b>6</b></button><button onClick={() => setView("profile")} aria-label="Open profile"><AppIcon name="profile" /></button></div>
+          <div className="mobile-top-actions"><button onClick={() => setView("calendar")} aria-label="Open planner"><AppIcon name="calendar" /></button><button className="notification-trigger" onClick={openNotifications} aria-label="Open notifications"><AppIcon name="bell" />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => setMenuOpen(true)} aria-label="Open menu"><AppIcon name="menu" /></button></div>
         </header>
         {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id)} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id)} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} />}
         {view === "explore" && (
@@ -463,17 +470,18 @@ export default function Home() {
         {view === "friends" && <FriendsView squad={squad} following={following} onToggle={toggleSquadMember} onFollow={toggleFollow} />}
         {view === "ranking" && <LeaderboardView people={PEOPLE} metric={leaderboardMetric} onMetric={setLeaderboardMetric} following={following} />}
         {view === "map" && <MapView quest={mapQuest} quests={ALL_QUESTS} onQuest={setMapQuest} />}
+        {view === "calendar" && <PlannerView quests={savedQuests.length ? savedQuests : FEATURED} onQuest={openQuest} />}
         {view === "profile" && <ProfileView saved={savedQuests.length} completed={user.completed.length} ranked={rankedQuests.length} onContact={() => setContactOpen(true)} />}
       </section>
 
       <aside className="right-rail">
         <section className="rail-utility">
-          <button onClick={() => setView("map")} aria-label="Open map"><AppIcon name="calendar" /></button>
-          <button className="notification-trigger" onClick={() => setNotificationsOpen(true)} aria-label="Open notifications"><AppIcon name="bell" /><b>6</b></button>
-          <button onClick={() => setSearchOpen(true)} aria-label="Search"><AppIcon name="search" /></button>
+          <button onClick={() => setView("calendar")} aria-label="Open planner"><AppIcon name="calendar" /></button>
+          <button className="notification-trigger" onClick={openNotifications} aria-label="Open notifications"><AppIcon name="bell" />{unread > 0 && <b>{unread}</b>}</button>
+          <button onClick={() => setMenuOpen(true)} aria-label="Open menu"><AppIcon name="menu" /></button>
         </section>
         <section className="rail-section">
-          <header><h2>Up next</h2><button onClick={() => setView("saved")}>See all</button></header>
+          <header><h2>Up next</h2><button onClick={() => setSearchOpen(true)}>See all</button></header>
           <div className="up-next-list">
             {upNext.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><strong>{quest.title}</strong><small>{quest.location.neighborhood} · {quest.durationMin} min</small></span></button>)}
           </div>
@@ -501,6 +509,7 @@ export default function Home() {
       {contactOpen && <div className="modal-backdrop"><section className="modal-card contact-modal"><button className="modal-close" onClick={() => setContactOpen(false)}>×</button><p className="eyebrow">CONTACT</p><h2>Build with us.</h2><a href="tel:+14694304138"><span>Phone</span><strong>(469) 430-4138</strong></a><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer"><span>GitHub</span><strong>omkherde/corgi_hackathon ↗</strong></a></section></div>}
       {notificationsOpen && <NotificationsPanel people={PEOPLE.slice(0, 8)} following={following} onFollow={toggleFollow} onClose={() => setNotificationsOpen(false)} />}
       {listOpen && <div className="modal-backdrop"><form className="modal-card create-list-modal" onSubmit={(event) => { event.preventDefault(); createList(); }}><button type="button" className="modal-close" onClick={() => setListOpen(false)}>×</button><p className="eyebrow">NEW LIST</p><h2>Give this list a name.</h2><input autoFocus value={listName} onChange={(event) => setListName(event.target.value)} placeholder="Late-night SF" /><button className="modal-primary" disabled={!listName.trim()}>Create list</button></form></div>}
+      {menuOpen && <div className="modal-backdrop"><section className="modal-card app-menu"><button className="modal-close" onClick={() => setMenuOpen(false)}>×</button><p className="eyebrow">DETOUR MENU</p><h2>Where to?</h2><button onClick={() => { setView("friends"); setMenuOpen(false); }}><AppIcon name="friends" /><span><strong>Friends</strong><small>Hackathon hosts and judges</small></span></button><button onClick={() => { setView("map"); setMenuOpen(false); }}><AppIcon name="map" /><span><strong>Map</strong><small>All nearby quests</small></span></button><button onClick={() => { setView("calendar"); setMenuOpen(false); }}><AppIcon name="calendar" /><span><strong>Planner</strong><small>Your saved week</small></span></button><button onClick={() => { setContactOpen(true); setMenuOpen(false); }}><AppIcon name="profile" /><span><strong>Contact</strong><small>Phone and GitHub</small></span></button></section></div>}
       {notice && <div className="notice">{notice}</div>}
     </main>
   );
@@ -580,6 +589,51 @@ function NotificationsPanel({ people, following, onFollow, onClose }: { people: 
 function ProfileView({ saved, completed, ranked, onContact }: { saved: number; completed: number; ranked: number; onContact: () => void }) {
   const [tab, setTab] = useState<"Activity" | "Lists" | "Photos" | "Info">("Activity");
   return <section className="inner-view profile-view"><p className="eyebrow">YOUR DETOUR PROFILE</p><div className="profile-hero"><div className="profile-monogram">OM</div><div><h1>Om Kherde</h1><p>San Francisco · Sidequest squad organizer</p></div><button onClick={onContact}>Contact</button></div><div className="profile-stats"><article><strong>{saved}</strong><span>Saved</span></article><article><strong>{completed}</strong><span>Completed</span></article><article><strong>{ranked}</strong><span>Ranked</span></article></div><div className="profile-tabs">{(["Activity", "Lists", "Photos", "Info"] as const).map((item) => <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>)}</div>{tab === "Activity" && <section className="taste-card"><p className="eyebrow">CURRENT TASTE</p><h2>Night walks, strange landmarks, and food worth crossing town for.</h2><div><span>AFTER DARK</span><span>PHOTO MISSIONS</span><span>LOCAL FOOD</span></div></section>}{tab === "Lists" && <div className="profile-panel"><h2>Three lists in rotation</h2><p>For tonight · Sidequest squad · SF essentials</p></div>}{tab === "Photos" && <div className="profile-photo-grid">{FEATURED.slice(0, 3).map((quest) => <span key={quest.id} style={{ backgroundImage: `url(${questImage(quest)})` }} />)}</div>}{tab === "Info" && <section className="profile-details"><div><span>Home base</span><strong>San Francisco, California</strong></div><div><span>Phone</span><a href="tel:+14694304138">(469) 430-4138</a></div><div><span>GitHub</span><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer">omkherde/corgi_hackathon ↗</a></div></section>}</section>;
+}
+
+function PlannerView({ quests: items, onQuest }: { quests: Quest[]; onQuest: (quest: Quest) => void }) {
+  const days = ["Tonight", "Sunday", "Monday", "Tuesday", "Wednesday"];
+  const [selectedDay, setSelectedDay] = useState(days[0]);
+  const [schedule, setSchedule] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const stored = localStorage.getItem("detour:planner");
+    if (stored) {
+      try {
+        const savedSchedule = JSON.parse(stored);
+        queueMicrotask(() => setSchedule(savedSchedule));
+      } catch {
+        localStorage.removeItem("detour:planner");
+      }
+    }
+  }, []);
+
+  function updateSchedule(day: string, questId?: string) {
+    const next = { ...schedule };
+    if (questId) next[day] = questId;
+    else delete next[day];
+    setSchedule(next);
+    localStorage.setItem("detour:planner", JSON.stringify(next));
+  }
+
+  const available = items.length ? items : FEATURED;
+  const selectedQuest = available.find((quest) => quest.id === schedule[selectedDay]);
+
+  return <section className="inner-view planner-view">
+    <p className="eyebrow">WEEKEND PLANNER</p>
+    <h1>Make a plan.</h1>
+    <p className="view-subtitle">Put one good idea on the calendar. Your plan stays saved on this device.</p>
+    <div className="planner-days">{days.map((day, index) => {
+      const planned = available.find((quest) => quest.id === schedule[day]);
+      return <button key={day} className={selectedDay === day ? "active" : ""} onClick={() => setSelectedDay(day)}><small>{index === 0 ? "JUL 26" : `JUL ${26 + index}`}</small><strong>{day}</strong><span>{planned ? planned.title : "Open"}</span></button>;
+    })}</div>
+    {selectedQuest ? <article className="planned-quest">
+      <button className="planned-photo" onClick={() => onQuest(selectedQuest)} style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(0,0,0,.72)), url(${questImage(selectedQuest)})` }}><span>{selectedQuest.location.neighborhood}</span><strong>{selectedQuest.title}</strong></button>
+      <div><p className="eyebrow">{selectedDay.toUpperCase()}</p><h2>{selectedQuest.title}</h2><p>{selectedQuest.durationMin} minutes · {selectedQuest.location.name}</p><div><button onClick={() => onQuest(selectedQuest)}>View quest</button><button onClick={() => updateSchedule(selectedDay)}>Remove</button></div></div>
+    </article> : <section className="planner-empty"><AppIcon name="calendar" /><div><h2>{selectedDay} is open.</h2><p>Choose a quest below and make it official.</p></div></section>}
+    <header className="planner-heading"><h2>Ideas for {selectedDay.toLowerCase()}</h2><span>{available.length} nearby</span></header>
+    <div className="planner-options">{available.slice(0, 8).map((quest) => <button key={quest.id} className={schedule[selectedDay] === quest.id ? "selected" : ""} onClick={() => updateSchedule(selectedDay, quest.id)}><span style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><small>{quest.location.neighborhood}</small><strong>{quest.title}</strong><em>{quest.durationMin} min</em></span><b>{schedule[selectedDay] === quest.id ? "✓" : "+"}</b></button>)}</div>
+  </section>;
 }
 
 function MapView({ quest, quests: items, onQuest }: { quest: Quest; quests: Quest[]; onQuest: (quest: Quest) => void }) {
