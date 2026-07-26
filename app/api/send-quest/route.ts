@@ -70,12 +70,19 @@ export async function POST(request: Request) {
     console.error("Photon send failed", error);
     const message = error instanceof Error ? error.message : "";
     const targetNotAllowed = message.includes("Target not allowed");
+    const lineUnavailable = /line|provider|imessage/i.test(message);
+    const authenticationFailed = /401|403|credential|secret|unauthorized/i.test(message);
     return NextResponse.json(
       {
         error: "Photon could not send this quest.",
         detail: targetNotAllowed
           ? "Photon blocked this recipient. Add the number to your project’s allowed targets, then try again."
-          : "Photon could not send this quest. Check the number and try again.",
+          : authenticationFailed
+            ? "Photon rejected the project credentials. Rotate the project secret and update the Vercel environment variables."
+            : lineUnavailable
+              ? "This Photon project does not have an active iMessage line available to send from."
+              : "Photon’s live Spectrum client could not complete delivery from this serverless request.",
+        code: targetNotAllowed ? "target_not_allowed" : authenticationFailed ? "authentication_failed" : lineUnavailable ? "line_unavailable" : "spectrum_delivery_failed",
       },
       { status: 502 },
     );

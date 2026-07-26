@@ -153,7 +153,12 @@ function PersonAvatar({ person, size = "md" }: { person: Person; size?: "sm" | "
   const initials = person.name.split(" ").map((part) => part[0]).slice(0, 2).join("");
   return person.avatar === undefined
     ? <span className={`identity-avatar identity-${size}`}>{initials}</span>
-    : <span className={`judge-avatar judge-${person.avatar} identity-${size}`} aria-label={`${person.name} profile photo`} />;
+    : <span className={`judge-avatar identity-${size}`} role="img" aria-label={`${person.name} profile photo`} style={{ backgroundImage: `url(/hackathon/judges/judge-${person.avatar}.png)` }} />;
+}
+
+function SquadAvatar({ seed, name, size = "md" }: { seed: string; name: string; size?: "sm" | "md" | "lg" }) {
+  const index = [...seed].reduce((total, character) => total + character.charCodeAt(0), 0) % 8;
+  return <span className={`squad-avatar squad-avatar-${index} identity-${size}`} role="img" aria-label={`${name} avatar`} />;
 }
 
 export default function Home() {
@@ -210,6 +215,9 @@ export default function Home() {
       setFollowing(JSON.parse(window.localStorage.getItem("detour:following") ?? "[]") as string[]);
       setCustomLists(JSON.parse(window.localStorage.getItem("detour:lists") ?? "[]") as string[]);
       setUserQuests(JSON.parse(window.localStorage.getItem("detour:user-quests") ?? "[]") as UserQuest[]);
+      setLikedPosts(JSON.parse(window.localStorage.getItem("detour:liked-posts") ?? "[]") as number[]);
+      setBookmarkedPosts(JSON.parse(window.localStorage.getItem("detour:bookmarked-posts") ?? "[]") as number[]);
+      setUnread(Number(window.localStorage.getItem("detour:unread") ?? "6"));
       setReady(true);
     });
   }, []);
@@ -371,8 +379,12 @@ export default function Home() {
     });
   }
 
-  function toggleNumber(setter: React.Dispatch<React.SetStateAction<number[]>>, id: number) {
-    setter((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  function toggleNumber(setter: React.Dispatch<React.SetStateAction<number[]>>, id: number, storageKey: string) {
+    setter((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      window.localStorage.setItem(storageKey, JSON.stringify(next));
+      return next;
+    });
   }
 
   function createList() {
@@ -386,6 +398,7 @@ export default function Home() {
 
   function openNotifications() {
     setUnread(0);
+    window.localStorage.setItem("detour:unread", "0");
     setNotificationsOpen(true);
   }
 
@@ -453,7 +466,7 @@ export default function Home() {
           <button className="wordmark" onClick={() => setView("feed")}><span>↗</span>detour</button>
           <div className="mobile-top-actions"><button onClick={() => setView("calendar")} aria-label="Open planner"><AppIcon name="calendar" /></button><button className="notification-trigger" onClick={openNotifications} aria-label="Open notifications"><AppIcon name="bell" />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => setMenuOpen(true)} aria-label="Open menu"><AppIcon name="menu" /></button></div>
         </header>
-        {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id)} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id)} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
+        {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id, "detour:liked-posts")} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id, "detour:bookmarked-posts")} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
         {view === "explore" && (
           <>
             <header className="workspace-header">
@@ -548,11 +561,11 @@ export default function Home() {
 
       {compare && comparisonQuest && <div className="modal-backdrop"><section className="modal-card"><p className="eyebrow">PLACE IT IN YOUR LIST</p><h2>Which was better?</h2><p>Your answer gives this quest an exact number.</p><button className="comparison-choice" onClick={() => answerComparison(true)}><small>NEW QUEST</small><strong>{compare.quest.title}</strong></button><span className="or">OR</span><button className="comparison-choice" onClick={() => answerComparison(false)}><small>CURRENTLY #{comparisonIndex + 1}</small><strong>{comparisonQuest.title}</strong></button></section></div>}
       {rankResult && <div className="modal-backdrop"><section className="modal-card result-card"><p className="eyebrow">RANKING UPDATED</p><strong className="result-number">#{rankResult.rank}</strong><h2>{rankResult.quest.title}</h2><button className="modal-primary" onClick={() => { setRankResult(null); setView("ranking"); }}>See full ranking</button><button className="modal-secondary" onClick={() => setRankResult(null)}>Keep exploring</button></section></div>}
-      {shareOpen && current && <div className="modal-backdrop"><section className="modal-card share-modal"><button className="modal-close" onClick={() => setShareOpen(false)}>×</button><p className="eyebrow">SEND WITH PHOTON</p><h2>Send this quest.</h2><p>Enter a phone number with country code.</p><label htmlFor="recipient">Recipient</label><input id="recipient" value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="+1 415 555 0123" inputMode="tel" /><div className="message-preview"><small>DETOUR</small><strong>{current.title}</strong><span>{current.location.name}</span></div><button className="modal-primary" onClick={sendQuest} disabled={sending || !recipient.trim()}>{sending ? "Sending..." : "Send in iMessage"}</button></section></div>}
+      {shareOpen && current && <div className="modal-backdrop"><section className="modal-card share-modal"><button className="modal-close" onClick={() => setShareOpen(false)}>×</button><p className="eyebrow">IMESSAGE</p><h2>Send this quest.</h2><p>Enter a phone number with country code.</p><label htmlFor="recipient">Recipient</label><input id="recipient" value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="+1 415 555 0123" inputMode="tel" /><button className="modal-primary" onClick={sendQuest} disabled={sending || !recipient.trim()}>{sending ? "Sending..." : "Send in iMessage"}</button></section></div>}
       {searchOpen && <div className="modal-backdrop"><section className="modal-card search-modal"><button className="modal-close" onClick={() => setSearchOpen(false)}>×</button><p className="eyebrow">GLOBAL SEARCH</p><h2>Find your next move.</h2><input autoFocus value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Quest, place, neighborhood, or person" /><div className="search-results">{PEOPLE.filter((person) => `${person.name} ${person.company}`.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, searchQuery ? 4 : 2).map((person) => <article className="person-search-result" key={person.name}><PersonAvatar person={person} /><span><strong>{person.name}</strong><small>{person.role} · {person.company}</small></span><button className={following.includes(person.name) ? "following" : ""} onClick={() => toggleFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}{searchResults.map((quest) => <button key={quest.id} onClick={() => openQuest(quest)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(quest)})` }} /><span><strong>{quest.title}</strong><small>{quest.location.address || quest.location.name}</small></span></button>)}</div></section></div>}
       {squadOpen && <div className="modal-backdrop"><section className="modal-card squad-modal"><button className="modal-close" onClick={() => setSquadOpen(false)}>×</button><p className="eyebrow">SIDEQUEST SQUAD</p><h2>Who is coming?</h2><p>Selections are saved on this device and change your planning group.</p><div className="people-list">{PEOPLE.map((person) => <button key={person.name} className={squad.includes(person.name) ? "selected" : ""} onClick={() => toggleSquadMember(person.name)}><PersonAvatar person={person} /><span><strong>{person.name}</strong><small>{person.role} · {person.company}</small></span><b>{squad.includes(person.name) ? "✓" : "+"}</b></button>)}</div><button className="modal-primary" onClick={() => setSquadOpen(false)}>Plan for {squad.length || 1}</button></section></div>}
       {contactOpen && <div className="modal-backdrop"><section className="modal-card contact-modal"><button className="modal-close" onClick={() => setContactOpen(false)}>×</button><p className="eyebrow">CONTACT</p><h2>Build with us.</h2><a href="tel:+14694304138"><span>Phone</span><strong>(469) 430-4138</strong></a><a href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer"><span>GitHub</span><strong>omkherde/corgi_hackathon ↗</strong></a></section></div>}
-      {notificationsOpen && <NotificationsPanel people={PEOPLE.slice(0, 8)} following={following} onFollow={toggleFollow} onClose={() => setNotificationsOpen(false)} />}
+      {notificationsOpen && <NotificationsPanel people={[...JUDGES.slice(0, 6), ...HOSTS.slice(0, 2)]} following={following} onFollow={toggleFollow} onClose={() => setNotificationsOpen(false)} />}
       {listOpen && <div className="modal-backdrop"><form className="modal-card create-list-modal" onSubmit={(event) => { event.preventDefault(); createList(); }}><button type="button" className="modal-close" onClick={() => setListOpen(false)}>×</button><p className="eyebrow">NEW LIST</p><h2>Give this list a name.</h2><input autoFocus value={listName} onChange={(event) => setListName(event.target.value)} placeholder="Late-night SF" /><button className="modal-primary" disabled={!listName.trim()}>Create list</button></form></div>}
       {menuOpen && <div className="modal-backdrop"><section className="modal-card app-menu"><button className="modal-close" onClick={() => setMenuOpen(false)}>×</button><p className="eyebrow">DETOUR MENU</p><h2>Where to?</h2><button onClick={() => { setAddQuestOpen(true); setMenuOpen(false); }}><AppIcon name="plus" /><span><strong>Add sidequest</strong><small>Share a place and its photos</small></span></button><button onClick={() => { setView("friends"); setMenuOpen(false); }}><AppIcon name="friends" /><span><strong>Friends</strong><small>Hackathon hosts and judges</small></span></button><button onClick={() => { setView("match"); setMenuOpen(false); }}><AppIcon name="radar" /><span><strong>Squad Match</strong><small>Queue with people nearby</small></span></button><button onClick={() => { setView("map"); setMenuOpen(false); }}><AppIcon name="map" /><span><strong>Map</strong><small>All nearby quests</small></span></button><button onClick={() => { setView("calendar"); setMenuOpen(false); }}><AppIcon name="calendar" /><span><strong>Planner</strong><small>Your saved week</small></span></button><button onClick={() => { setContactOpen(true); setMenuOpen(false); }}><AppIcon name="profile" /><span><strong>Contact</strong><small>Phone and GitHub</small></span></button></section></div>}
       {addQuestOpen && <AddSidequestModal location={location} onAdd={addUserQuest} onClose={() => setAddQuestOpen(false)} />}
@@ -644,14 +657,53 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
   const [feedMode, setFeedMode] = useState<"Nearby" | "Trending" | "Friends">("Trending");
   const [commentPost, setCommentPost] = useState<number | null>(null);
   const [comment, setComment] = useState("");
+  const [sharedPosts, setSharedPosts] = useState<number[]>([]);
+  const [comments, setComments] = useState<Record<number, { name: string; text: string }[]>>({
+    0: [{ name: "Aidan", text: "The fog was perfect around 7." }, { name: "Saai", text: "Saving this for tomorrow morning." }, { name: "Bill", text: "Bring a jacket. It gets cold fast." }],
+    1: [{ name: "Leon", text: "The maple bar is the move." }, { name: "Connor", text: "This is dangerously close to the venue." }, { name: "Dammy", text: "Late-night squad?" }, { name: "Sean", text: "I am in." }],
+    2: [{ name: "Guanming", text: "Grant looks great after the shops close." }, { name: "Marinos", text: "Blue hour works too." }, { name: "Varun", text: "Bring the small lens." }, { name: "Leo", text: "The storefront light is enough." }, { name: "Anis", text: "Best photo mission in the deck." }],
+  });
   const [hiddenPeople, setHiddenPeople] = useState<string[]>([]);
   const [recommendationAsk, setRecommendationAsk] = useState("");
   const [recommendationSent, setRecommendationSent] = useState(false);
   const postPeople = [people[2], people[4], people[7]];
-  async function shareQuest(quest: Quest) {
+  const feedItems = feedMode === "Nearby" ? [items[0], items[2], items[1]] : feedMode === "Friends" ? [items[1], items[0], items[2]] : [items[2], items[0], items[1]];
+  useEffect(() => {
+    queueMicrotask(() => {
+      const savedComments = window.localStorage.getItem("detour:feed-comments");
+      if (savedComments) setComments(JSON.parse(savedComments) as Record<number, { name: string; text: string }[]>);
+    });
+  }, []);
+
+  async function shareQuest(quest: Quest, index: number) {
     const url = `${window.location.origin}?quest=${quest.id}`;
-    if (navigator.share) await navigator.share({ title: quest.title, text: quest.body, url });
-    else await navigator.clipboard.writeText(url);
+    try {
+      if (navigator.share) await navigator.share({ title: quest.title, text: quest.body, url });
+      else await navigator.clipboard.writeText(url);
+      setSharedPosts((current) => current.includes(index) ? current : [...current, index]);
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) await navigator.clipboard.writeText(url);
+    }
+  }
+
+  function postComment(index: number) {
+    if (!comment.trim()) return;
+    const next = { ...comments, [index]: [...(comments[index] || []), { name: "Om", text: comment.trim() }] };
+    setComments(next);
+    window.localStorage.setItem("detour:feed-comments", JSON.stringify(next));
+    setComment("");
+  }
+  async function askFriends() {
+    if (!recommendationAsk.trim()) return;
+    const text = `Any Detour recommendations for: ${recommendationAsk.trim()}`;
+    try {
+      if (navigator.share) await navigator.share({ title: "Help me pick a Detour", text });
+      else await navigator.clipboard.writeText(text);
+      setRecommendationSent(true);
+      setRecommendationAsk("");
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) await navigator.clipboard.writeText(text);
+    }
   }
   return <section className="feed-view">
     <header className="feed-header"><div><p className="eyebrow">SATURDAY IN SAN FRANCISCO</p><h1>Find the good part.</h1></div><button className="feed-search" onClick={onSearch}><AppIcon name="search" /><span>Search quests, people, lists</span></button></header>
@@ -659,9 +711,9 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
     <section className="invite-banner"><div><p className="eyebrow">SIDEQUEST SQUAD</p><h2>Bring the group with you.</h2><span>Share rankings, trade recommendations, and build tonight&apos;s plan together.</span></div><div className="invite-benefits"><span><AppIcon name="trophy" size={18} />Shared rankings</span><span><AppIcon name="send" size={18} />Quest sharing</span><span><AppIcon name="friends" size={18} />Squad planning</span></div><button onClick={onInvite}>Invite friends</button></section>
     <section className="featured-lists"><header><div><p className="eyebrow">FEATURED LISTS</p><h2>Made for tonight</h2></div><button onClick={onSearch}>See all</button></header><div className="featured-list-track">{items.slice(0, 3).map((quest, index) => <button key={quest.id} onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `linear-gradient(180deg, transparent 30%, rgba(0,0,0,.8)), url(${questImage(quest)})` }}><span>0 / {index + 6} COMPLETE</span><strong>{index === 0 ? "After-dark San Francisco" : index === 1 ? "Worth crossing town for" : "Photo missions for two"}</strong><small>{quest.location.neighborhood} and nearby</small></button>)}</div></section>
     <section className="friend-suggestions"><header><div><p className="eyebrow">PEOPLE IN THE ROOM</p><h2>Follow the hackathon crew</h2></div><button onClick={onFriends}>View everyone</button></header><div>{people.filter((person) => !hiddenPeople.includes(person.name)).slice(0, 4).map((person) => <article key={person.name}><button className="dismiss-person" onClick={() => setHiddenPeople([...hiddenPeople, person.name])} aria-label={`Dismiss ${person.name}`}>×</button><PersonAvatar person={person} size="lg" /><strong>{person.name}</strong><small>{person.company}</small><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}</div></section>
-    <form className="ask-friends" onSubmit={(event) => { event.preventDefault(); if (!recommendationAsk.trim()) return; setRecommendationSent(true); setRecommendationAsk(""); }}><span className="profile-monogram">OM</span><label><span>{recommendationSent ? "Request sent to your squad" : "Ask your friends for a recommendation"}</span><input value={recommendationAsk} onChange={(event) => { setRecommendationAsk(event.target.value); setRecommendationSent(false); }} placeholder="Late-night food near Chinatown?" /></label><button disabled={!recommendationAsk.trim()}><AppIcon name="send" /></button></form>
+    <form className="ask-friends" onSubmit={(event) => { event.preventDefault(); void askFriends(); }}><span className="profile-monogram">OM</span><label><span>{recommendationSent ? "Recommendation request shared" : "Ask your friends for a recommendation"}</span><input value={recommendationAsk} onChange={(event) => { setRecommendationAsk(event.target.value); setRecommendationSent(false); }} placeholder="Late-night food near Chinatown?" /></label><button disabled={!recommendationAsk.trim()} aria-label="Share recommendation request"><AppIcon name="send" /></button></form>
     <header className="feed-section-title"><p className="eyebrow">YOUR FEED</p><h2>{feedMode === "Friends" ? "What your crew saved" : feedMode === "Nearby" ? "Happening near you" : "Trending with builders"}</h2></header>
-    <div className="social-feed">{items.slice(0, 3).map((quest, index) => {
+    <div className="social-feed">{feedItems.filter(Boolean).map((quest, index) => {
       const person = postPeople[index];
       const isLiked = liked.includes(index);
       const isBookmarked = bookmarked.includes(index);
@@ -669,8 +721,8 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
         <header><PersonAvatar person={person} /><div><strong>{person.name} <span>{index === 1 ? "saved" : "ranked"} {quest.title}</span></strong><small>{quest.location.neighborhood} · {index + 1}h</small></div><span className="feed-score">{[9.2, 8.7, 8.4][index]}</span></header>
         <button className="feed-photo" onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `url(${questImage(quest)})` }}><span>{quest.vibe}</span></button>
         <div className="feed-post-copy"><h3>{quest.title}</h3><div className="feed-tags"><span>{questTraits(quest).price}</span><span>{questTraits(quest).activity}</span><span>{questTraits(quest).energy}</span><span>{quest.durationMin} min</span></div><a href={`https://www.google.com/maps/search/?api=1&query=${quest.location.lat},${quest.location.lng}`} target="_blank" rel="noreferrer">{quest.location.address} ↗</a><p><b>Notes:</b> {index === 0 ? "The path looks completely different after the fog settles. Go before the late crowd and bring one person." : index === 1 ? "Exactly the kind of place you almost walk past. The small constraint made the whole stop memorable." : "Best at the edge of blue hour. The view works, but the challenge is what made this worth saving."}</p></div>
-        <footer><div><button className={isLiked ? "active" : ""} onClick={() => onLike(index)} aria-label="Like"><AppIcon name="heart" /><span>{12 + index * 7 + (isLiked ? 1 : 0)}</span></button><button onClick={() => setCommentPost(commentPost === index ? null : index)} aria-label="Comment"><AppIcon name="comment" /><span>{3 + index}</span></button><button onClick={() => void shareQuest(quest)} aria-label="Share"><AppIcon name="send" /></button></div><button className={isBookmarked ? "active" : ""} onClick={() => onBookmark(index)} aria-label="Bookmark"><AppIcon name="bookmark" /></button></footer>
-        {commentPost === index && <form className="comment-box" onSubmit={(event) => { event.preventDefault(); setComment(""); setCommentPost(null); }}><input autoFocus value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Add a note for the crew" /><button disabled={!comment.trim()}>Post</button></form>}
+        <footer><div><button className={isLiked ? "active" : ""} onClick={() => onLike(index)} aria-label="Like" aria-pressed={isLiked}><AppIcon name="heart" /><span>{12 + index * 7 + (isLiked ? 1 : 0)}</span></button><button className={commentPost === index ? "active" : ""} onClick={() => setCommentPost(commentPost === index ? null : index)} aria-label="Comments" aria-expanded={commentPost === index}><AppIcon name="comment" /><span>{comments[index]?.length || 0}</span></button><button className={sharedPosts.includes(index) ? "active" : ""} onClick={() => void shareQuest(quest, index)} aria-label="Share" aria-pressed={sharedPosts.includes(index)}><AppIcon name="send" /></button></div><button className={isBookmarked ? "active" : ""} onClick={() => onBookmark(index)} aria-label="Bookmark" aria-pressed={isBookmarked}><AppIcon name="bookmark" /></button></footer>
+        {commentPost === index && <section className="comment-thread"><div>{(comments[index] || []).map((item, commentIndex) => <article key={`${item.name}-${commentIndex}`}><span>{item.name.slice(0, 1)}</span><p><strong>{item.name}</strong>{item.text}</p></article>)}</div><form className="comment-box" onSubmit={(event) => { event.preventDefault(); postComment(index); }}><input autoFocus value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Add a comment" /><button disabled={!comment.trim()}>Post</button></form></section>}
       </article>;
     })}</div>
   </section>;
@@ -776,7 +828,7 @@ function MatchmakingView({ location, locationLabel, hasPreciseLocation, locating
     <p className="eyebrow">PROXIMITY MATCHMAKING</p><h1>Fill the squad.</h1>
     <p className="view-subtitle">Opt in for 30 minutes and find other Detour users who are ready to go now. Exact locations are never shown.</p>
     <div className="match-layout"><section className="match-control"><div className={`radar-visual ${active ? "active" : ""}`}><i /><i /><i /><span><AppIcon name="radar" size={34} /></span>{nearby.slice(0, 3).map((player, index) => <b key={player.id} className={`ping ping-${index + 1}`} title={player.name} />)}</div><div className="match-status"><span className={hasPreciseLocation ? "ready" : ""}>{hasPreciseLocation ? "LOCATION READY" : "LOCATION REQUIRED"}</span><strong>{hasPreciseLocation ? locationLabel : "Share your location to set a real radius"}</strong></div>{!hasPreciseLocation ? <button className="match-primary" onClick={onLocate} disabled={locating}>{locating ? "Finding you..." : "Use my location"}</button> : active ? <button className="match-secondary" onClick={() => void updateQueue("leave")}>Leave queue</button> : <button className="match-primary" onClick={() => void updateQueue("join")}>Find my squad</button>}<small className="privacy-note">Your coordinates are held temporarily in memory and expire automatically. Other users only receive an approximate distance.</small></section><section className="match-settings"><label><span>DISPLAY NAME</span><input value={nickname} onChange={(event) => setNickname(event.target.value)} maxLength={24} disabled={active} /></label><div><span className="setting-label">WHO CAN MATCH</span><div className="segmented">{(["open", "friends"] as const).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)} disabled={active}>{item === "open" ? "Open squad" : "Friends only"}</button>)}</div></div><div><span className="setting-label">SEARCH RADIUS</span><div className="radius-options">{[1, 3, 5].map((miles) => <button key={miles} className={radius === miles ? "active" : ""} onClick={() => setRadius(miles)} disabled={active}>{miles} mi</button>)}</div></div><p className="queue-copy">{mode === "open" ? "Open squad lets you match with any opted-in Detour user nearby." : `Friends only limits results to the ${following.length} people you follow.`}</p><button className="invite-known" onClick={onInvite}><AppIcon name="friends" />Invite friends instead</button></section></div>
-    <section className="nearby-queue"><header><div><p className="eyebrow">QUEUE</p><h2>{active ? `${nearby.length} nearby ${nearby.length === 1 ? "person" : "people"}` : "Not discoverable yet"}</h2></div>{active && <button onClick={() => void updateQueue("list")}>Refresh</button>}</header>{match && <div className="formed-squad"><span className="identity-avatar identity-md">{match.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><small>SQUAD FORMED</small><strong>You matched with {match.name}</strong></div><AppIcon name="bolt" /></div>}{requests.length > 0 && <div className="squad-requests"><p className="eyebrow">REQUESTS</p>{requests.map((request) => <article key={request.id}><span className="identity-avatar identity-md">{request.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><strong>{request.name}</strong><small>Wants to queue up with you</small></div><button onClick={() => void updateQueue("accept", request.id)}>Accept</button></article>)}</div>}{active && nearby.length > 0 ? <div>{nearby.map((player) => <article key={player.id}><span className="identity-avatar identity-md">{player.name.split(" ").map((part) => part[0]).slice(0, 2).join("")}</span><div><strong>{player.name}</strong><small>{player.distanceMiles < .1 ? "Less than 0.1 mi away" : `${player.distanceMiles.toFixed(1)} mi away`} · Ready now</small></div><button onClick={() => void updateQueue("request", player.id)}>Queue up</button></article>)}</div> : !match && <div className="queue-empty"><AppIcon name="radar" size={30} /><p>{active ? "No opted-in users are in your radius yet. Keep the queue open or invite your friends." : "Choose your radius and go discoverable when you are ready."}</p></div>}{status && <p className="match-message">{status}</p>}</section>
+    <section className="nearby-queue"><header><div><p className="eyebrow">QUEUE</p><h2>{active ? `${nearby.length} nearby ${nearby.length === 1 ? "person" : "people"}` : "Not discoverable yet"}</h2></div>{active && <button onClick={() => void updateQueue("list")}>Refresh</button>}</header>{match && <div className="formed-squad"><SquadAvatar seed={match.id} name={match.name} /><div><small>SQUAD FORMED</small><strong>You matched with {match.name}</strong></div><AppIcon name="bolt" /></div>}{requests.length > 0 && <div className="squad-requests"><p className="eyebrow">REQUESTS</p>{requests.map((request) => <article key={request.id}><SquadAvatar seed={request.id} name={request.name} /><div><strong>{request.name}</strong><small>Wants to queue up with you</small></div><button onClick={() => void updateQueue("accept", request.id)}>Accept</button></article>)}</div>}{active && nearby.length > 0 ? <div>{nearby.map((player) => <article key={player.id}><SquadAvatar seed={player.id} name={player.name} /><div><strong>{player.name}</strong><small>{player.distanceMiles < .1 ? "Less than 0.1 mi away" : `${player.distanceMiles.toFixed(1)} mi away`} · Ready now</small></div><button onClick={() => void updateQueue("request", player.id)}>Queue up</button></article>)}</div> : !match && <div className="queue-empty"><AppIcon name="radar" size={30} /><p>{active ? "No opted-in users are in your radius yet. Keep the queue open or invite your friends." : "Choose your radius and go discoverable when you are ready."}</p></div>}{status && <p className="match-message">{status}</p>}</section>
   </section>;
 }
 
@@ -854,5 +906,5 @@ function PlannerView({ quests: items, onQuest }: { quests: Quest[]; onQuest: (qu
 
 function MapView({ quest, quests: items, onQuest }: { quest: Quest; quests: Quest[]; onQuest: (quest: Quest) => void }) {
   const bbox = `${quest.location.lng - 0.02}%2C${quest.location.lat - 0.015}%2C${quest.location.lng + 0.02}%2C${quest.location.lat + 0.015}`;
-  return <section className="inner-view map-view"><p className="eyebrow">QUEST MAP</p><h1>San Francisco, mapped.</h1><p className="view-subtitle">OpenStreetMap needs no API key. Select a place below to recenter the map.</p><div className="map-frame"><iframe title={`Map of ${quest.location.name}`} src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${quest.location.lat}%2C${quest.location.lng}`} loading="lazy" /><div className="map-card"><span>{quest.location.neighborhood}</span><h2>{quest.title}</h2><p>{quest.location.address || quest.location.name}</p><a href={`https://www.openstreetmap.org/?mlat=${quest.location.lat}&mlon=${quest.location.lng}#map=16/${quest.location.lat}/${quest.location.lng}`} target="_blank" rel="noreferrer">Open full map ↗</a></div></div><div className="map-quest-strip">{items.slice(0, 16).map((item) => <button key={item.id} className={item.id === quest.id ? "active" : ""} onClick={() => onQuest(item)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(item)})` }} /><span><strong>{item.title}</strong><small>{item.location.neighborhood}</small></span></button>)}</div></section>;
+  return <section className="inner-view map-view"><p className="eyebrow">QUEST MAP</p><h1>San Francisco, mapped.</h1><div className="map-frame"><iframe title={`Map of ${quest.location.name}`} src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${quest.location.lat}%2C${quest.location.lng}`} loading="lazy" /><div className="map-card"><span>{quest.location.neighborhood}</span><h2>{quest.title}</h2><p>{quest.location.address || quest.location.name}</p><a href={`https://www.openstreetmap.org/?mlat=${quest.location.lat}&mlon=${quest.location.lng}#map=16/${quest.location.lat}/${quest.location.lng}`} target="_blank" rel="noreferrer">Open full map ↗</a></div></div><div className="map-quest-strip">{items.slice(0, 16).map((item) => <button key={item.id} className={item.id === quest.id ? "active" : ""} onClick={() => onQuest(item)}><span className="remote-thumb" style={{ backgroundImage: `url(${questImage(item)})` }} /><span><strong>{item.title}</strong><small>{item.location.neighborhood}</small></span></button>)}</div></section>;
 }
