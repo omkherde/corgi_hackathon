@@ -179,6 +179,8 @@ export default function Home() {
   const [customLists, setCustomLists] = useState<string[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [unread, setUnread] = useState(6);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteCopied, setInviteCopied] = useState(false);
   const pointerStart = useRef(0);
 
   useEffect(() => {
@@ -376,6 +378,17 @@ export default function Home() {
     setView("explore");
   }
 
+  async function inviteFriends() {
+    const invite = { title: "Join my Detour squad", text: "Help me find the good part of San Francisco on Detour.", url: window.location.origin };
+    if (navigator.share) {
+      await navigator.share(invite);
+      setInviteOpen(false);
+      return;
+    }
+    await navigator.clipboard.writeText(`${invite.text} ${invite.url}`);
+    setInviteCopied(true);
+  }
+
   const searchResults = ALL_QUESTS.filter((quest) =>
     `${quest.title} ${quest.location.name} ${quest.location.neighborhood}`.toLowerCase().includes(searchQuery.toLowerCase()),
   ).slice(0, 12);
@@ -410,7 +423,7 @@ export default function Home() {
           <button className="wordmark" onClick={() => setView("feed")}><span>↗</span>detour</button>
           <div className="mobile-top-actions"><button onClick={() => setView("calendar")} aria-label="Open planner"><AppIcon name="calendar" /></button><button className="notification-trigger" onClick={openNotifications} aria-label="Open notifications"><AppIcon name="bell" />{unread > 0 && <b>{unread}</b>}</button><button onClick={() => setMenuOpen(true)} aria-label="Open menu"><AppIcon name="menu" /></button></div>
         </header>
-        {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id)} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id)} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} />}
+        {view === "feed" && <FeedView quests={FEATURED} people={JUDGES.slice(0, 8)} following={following} onFollow={toggleFollow} liked={likedPosts} bookmarked={bookmarkedPosts} onLike={(id) => toggleNumber(setLikedPosts, id)} onBookmark={(id) => toggleNumber(setBookmarkedPosts, id)} onOpenQuest={openQuest} onSearch={() => setSearchOpen(true)} onFriends={() => setView("friends")} onLocate={requestLocation} onInvite={() => { setInviteCopied(false); setInviteOpen(true); }} />}
         {view === "explore" && (
           <>
             <header className="workspace-header">
@@ -510,12 +523,13 @@ export default function Home() {
       {notificationsOpen && <NotificationsPanel people={PEOPLE.slice(0, 8)} following={following} onFollow={toggleFollow} onClose={() => setNotificationsOpen(false)} />}
       {listOpen && <div className="modal-backdrop"><form className="modal-card create-list-modal" onSubmit={(event) => { event.preventDefault(); createList(); }}><button type="button" className="modal-close" onClick={() => setListOpen(false)}>×</button><p className="eyebrow">NEW LIST</p><h2>Give this list a name.</h2><input autoFocus value={listName} onChange={(event) => setListName(event.target.value)} placeholder="Late-night SF" /><button className="modal-primary" disabled={!listName.trim()}>Create list</button></form></div>}
       {menuOpen && <div className="modal-backdrop"><section className="modal-card app-menu"><button className="modal-close" onClick={() => setMenuOpen(false)}>×</button><p className="eyebrow">DETOUR MENU</p><h2>Where to?</h2><button onClick={() => { setView("friends"); setMenuOpen(false); }}><AppIcon name="friends" /><span><strong>Friends</strong><small>Hackathon hosts and judges</small></span></button><button onClick={() => { setView("map"); setMenuOpen(false); }}><AppIcon name="map" /><span><strong>Map</strong><small>All nearby quests</small></span></button><button onClick={() => { setView("calendar"); setMenuOpen(false); }}><AppIcon name="calendar" /><span><strong>Planner</strong><small>Your saved week</small></span></button><button onClick={() => { setContactOpen(true); setMenuOpen(false); }}><AppIcon name="profile" /><span><strong>Contact</strong><small>Phone and GitHub</small></span></button></section></div>}
+      {inviteOpen && <div className="modal-backdrop"><section className="modal-card invite-modal"><button className="modal-close" onClick={() => setInviteOpen(false)}>×</button><p className="eyebrow">GROW THE SQUAD</p><h2>Detours are better together.</h2><p>Invite a friend to share quests, compare rankings, and plan a night out.</p><div className="invite-code"><span>YOUR INVITE LINK</span><strong>corgi-hackathon-pink.vercel.app</strong></div><button className="modal-primary" onClick={() => void inviteFriends()}>{inviteCopied ? "Copied to clipboard" : "Invite friends"}</button></section></div>}
       {notice && <div className="notice">{notice}</div>}
     </main>
   );
 }
 
-function FeedView({ quests: items, people, following, onFollow, liked, bookmarked, onLike, onBookmark, onOpenQuest, onSearch, onFriends, onLocate }: {
+function FeedView({ quests: items, people, following, onFollow, liked, bookmarked, onLike, onBookmark, onOpenQuest, onSearch, onFriends, onLocate, onInvite }: {
   quests: Quest[];
   people: Person[];
   following: string[];
@@ -528,10 +542,14 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
   onSearch: () => void;
   onFriends: () => void;
   onLocate: () => void;
+  onInvite: () => void;
 }) {
   const [feedMode, setFeedMode] = useState<"Nearby" | "Trending" | "Friends">("Trending");
   const [commentPost, setCommentPost] = useState<number | null>(null);
   const [comment, setComment] = useState("");
+  const [hiddenPeople, setHiddenPeople] = useState<string[]>([]);
+  const [recommendationAsk, setRecommendationAsk] = useState("");
+  const [recommendationSent, setRecommendationSent] = useState(false);
   const postPeople = [people[2], people[4], people[7]];
   async function shareQuest(quest: Quest) {
     const url = `${window.location.origin}?quest=${quest.id}`;
@@ -541,8 +559,10 @@ function FeedView({ quests: items, people, following, onFollow, liked, bookmarke
   return <section className="feed-view">
     <header className="feed-header"><div><p className="eyebrow">SATURDAY IN SAN FRANCISCO</p><h1>Find the good part.</h1></div><button className="feed-search" onClick={onSearch}><AppIcon name="search" /><span>Search quests, people, lists</span></button></header>
     <div className="discovery-tabs">{(["Nearby", "Trending", "Friends"] as const).map((mode) => <button key={mode} className={feedMode === mode ? "active" : ""} onClick={() => { setFeedMode(mode); if (mode === "Nearby") onLocate(); }}>{mode === "Nearby" ? "⌖" : mode === "Trending" ? "↗" : "♙"} {mode === "Friends" ? "Friend recs" : mode}</button>)}</div>
+    <section className="invite-banner"><div><p className="eyebrow">SIDEQUEST SQUAD</p><h2>Bring the group with you.</h2><span>Share rankings, trade recommendations, and build tonight&apos;s plan together.</span></div><div className="invite-benefits"><span><AppIcon name="trophy" size={18} />Shared rankings</span><span><AppIcon name="send" size={18} />Quest sharing</span><span><AppIcon name="friends" size={18} />Squad planning</span></div><button onClick={onInvite}>Invite friends</button></section>
     <section className="featured-lists"><header><div><p className="eyebrow">FEATURED LISTS</p><h2>Made for tonight</h2></div><button onClick={onSearch}>See all</button></header><div className="featured-list-track">{items.slice(0, 3).map((quest, index) => <button key={quest.id} onClick={() => onOpenQuest(quest)} style={{ backgroundImage: `linear-gradient(180deg, transparent 30%, rgba(0,0,0,.8)), url(${questImage(quest)})` }}><span>0 / {index + 6} COMPLETE</span><strong>{index === 0 ? "After-dark San Francisco" : index === 1 ? "Worth crossing town for" : "Photo missions for two"}</strong><small>{quest.location.neighborhood} and nearby</small></button>)}</div></section>
-    <section className="friend-suggestions"><header><div><p className="eyebrow">PEOPLE IN THE ROOM</p><h2>Follow the hackathon crew</h2></div><button onClick={onFriends}>View everyone</button></header><div>{people.slice(0, 4).map((person) => <article key={person.name}><PersonAvatar person={person} size="lg" /><strong>{person.name}</strong><small>{person.company}</small><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}</div></section>
+    <section className="friend-suggestions"><header><div><p className="eyebrow">PEOPLE IN THE ROOM</p><h2>Follow the hackathon crew</h2></div><button onClick={onFriends}>View everyone</button></header><div>{people.filter((person) => !hiddenPeople.includes(person.name)).slice(0, 4).map((person) => <article key={person.name}><button className="dismiss-person" onClick={() => setHiddenPeople([...hiddenPeople, person.name])} aria-label={`Dismiss ${person.name}`}>×</button><PersonAvatar person={person} size="lg" /><strong>{person.name}</strong><small>{person.company}</small><button className={following.includes(person.name) ? "following" : ""} onClick={() => onFollow(person.name)}>{following.includes(person.name) ? "Following" : "Follow"}</button></article>)}</div></section>
+    <form className="ask-friends" onSubmit={(event) => { event.preventDefault(); if (!recommendationAsk.trim()) return; setRecommendationSent(true); setRecommendationAsk(""); }}><span className="profile-monogram">OM</span><label><span>{recommendationSent ? "Request sent to your squad" : "Ask your friends for a recommendation"}</span><input value={recommendationAsk} onChange={(event) => { setRecommendationAsk(event.target.value); setRecommendationSent(false); }} placeholder="Late-night food near Chinatown?" /></label><button disabled={!recommendationAsk.trim()}><AppIcon name="send" /></button></form>
     <header className="feed-section-title"><p className="eyebrow">YOUR FEED</p><h2>{feedMode === "Friends" ? "What your crew saved" : feedMode === "Nearby" ? "Happening near you" : "Trending with builders"}</h2></header>
     <div className="social-feed">{items.slice(0, 3).map((quest, index) => {
       const person = postPeople[index];
