@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Detour — Side quests near you",
+  title: "Detour | Side quests near you",
   description:
     "Weird, specific things to do nearby, ranked by people whose taste you trust.",
 };

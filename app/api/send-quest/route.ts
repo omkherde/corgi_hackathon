@@ -24,7 +24,7 @@ function isQuest(quest: Partial<Quest> | undefined): quest is Quest {
 
 function formatQuest(quest: Quest): string {
   return [
-    `DETOUR — ${quest.title}`,
+    `DETOUR | ${quest.title}`,
     quest.body,
     `📍 ${quest.location.name}, ${quest.location.neighborhood}`,
     `⏱ ${quest.durationMin} min`,

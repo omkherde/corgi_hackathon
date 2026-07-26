@@ -7,35 +7,100 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import Image from "next/image";
 
 import quests from "@/data/quests.json";
 import { scoreQuests, type Coordinates } from "@/lib/scoring";
 import { loadUserState, saveUserState } from "@/lib/storage";
 import type { Quest, UserState } from "@/types";
 
-const SF_FALLBACK: Coordinates = { lat: 37.7749, lng: -122.4194 };
-const ALL_QUESTS = quests as Quest[];
+const SF: Coordinates = { lat: 37.7749, lng: -122.4194 };
 const EMPTY_STATE: UserState = { ranked: [], swipes: {}, completed: [] };
-const SWIPE_THRESHOLD = 90;
+const SWIPE_THRESHOLD = 85;
 
-type Tab = "discover" | "ranking";
+const FEATURED: Quest[] = [
+  {
+    id: "featured-wood-line",
+    title: "Walk the line",
+    body: "Follow the full 1,200-foot curve. One photo each, with no bridge in frame.",
+    vibe: "photo",
+    location: { name: "Andy Goldsworthy's Wood Line", neighborhood: "Presidio", lat: 37.7914, lng: -122.4496 },
+    durationMin: 45,
+    bestTime: ["afternoon"],
+    groupSize: "group",
+    weirdness: 2,
+  },
+  {
+    id: "featured-bobs",
+    title: "The 1 AM doughnut run",
+    body: "Order one classic and one wildcard. Trade halfway through, then rank both before you leave.",
+    vibe: "food",
+    location: { name: "Bob's Donuts", neighborhood: "Nob Hill", lat: 37.7919, lng: -122.4215 },
+    durationMin: 35,
+    bestTime: ["late_night"],
+    groupSize: "group",
+    weirdness: 2,
+  },
+  {
+    id: "featured-chinatown",
+    title: "Lantern hour",
+    body: "Walk Grant after dark. Find the quietest block and take one portrait using only storefront light.",
+    vibe: "photo",
+    location: { name: "Grant Avenue", neighborhood: "Chinatown", lat: 37.7954, lng: -122.4078 },
+    durationMin: 50,
+    bestTime: ["night"],
+    groupSize: "pair",
+    weirdness: 3,
+  },
+  {
+    id: "featured-bridge",
+    title: "Make the bridge small",
+    body: "Find a view where the Golden Gate fits between two fingers. No zoom and no standard postcard angle.",
+    vibe: "photo",
+    location: { name: "Pacific Overlook", neighborhood: "Presidio", lat: 37.7986, lng: -122.4769 },
+    durationMin: 55,
+    bestTime: ["golden_hour"],
+    groupSize: "pair",
+    weirdness: 2,
+  },
+];
+
+const IMAGES: Record<string, string> = {
+  "featured-wood-line": "/quests/wood-line.jpg",
+  "featured-bobs": "/quests/donuts.jpg",
+  "featured-chinatown": "/quests/chinatown.jpg",
+  "featured-bridge": "/quests/golden-gate.jpg",
+};
+
+const PHOTO_CREDITS: Record<string, string> = {
+  "featured-wood-line": "https://unsplash.com/photos/xK-V2G7joFA",
+  "featured-bobs": "https://unsplash.com/photos/1551024601-bec78aea704b",
+  "featured-chinatown": "https://unsplash.com/photos/HjMkImW-9PA",
+  "featured-bridge": "https://unsplash.com/photos/LeB2TbkT7n4",
+};
+
+const ALL_QUESTS = [...FEATURED, ...(quests as Quest[])];
+type View = "explore" | "saved" | "friends" | "ranking";
 type CompareState = { quest: Quest; lo: number; hi: number };
-type RankResult = { quest: Quest; rank: number };
+
+const Icon = ({ children }: { children: React.ReactNode }) => (
+  <span className="nav-icon" aria-hidden="true">{children}</span>
+);
 
 export default function Home() {
   const [user, setUser] = useState<UserState>(EMPTY_STATE);
   const [ready, setReady] = useState(false);
-  const [tab, setTab] = useState<Tab>("discover");
-  const [location, setLocation] = useState<Coordinates>(SF_FALLBACK);
-  const [locationLabel, setLocationLabel] = useState("San Francisco fallback");
+  const [view, setView] = useState<View>("explore");
+  const [location, setLocation] = useState<Coordinates>(SF);
+  const [locationLabel, setLocationLabel] = useState("San Francisco");
   const [locating, setLocating] = useState(false);
+  const [filter, setFilter] = useState("For tonight");
   const [compare, setCompare] = useState<CompareState | null>(null);
-  const [rankResult, setRankResult] = useState<RankResult | null>(null);
-  const [personalizedCopy, setPersonalizedCopy] = useState({ questId: "", copy: "" });
+  const [rankResult, setRankResult] = useState<{ quest: Quest; rank: number } | null>(null);
   const [notice, setNotice] = useState("");
-  const [sending, setSending] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [recipient, setRecipient] = useState("");
+  const [sending, setSending] = useState(false);
   const [dragX, setDragX] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [swipeAnimating, setSwipeAnimating] = useState(false);
@@ -53,111 +118,69 @@ export default function Home() {
     if (ready) saveUserState(user);
   }, [ready, user]);
 
-  const byId = useMemo(
-    () => new Map(ALL_QUESTS.map((quest) => [quest.id, quest])),
-    [],
-  );
+  const byId = useMemo(() => new Map(ALL_QUESTS.map((quest) => [quest.id, quest])), []);
   const rankedQuests = useMemo(
-    () =>
-      user.ranked
-        .map((id) => byId.get(id))
-        .filter((quest): quest is Quest => Boolean(quest)),
+    () => user.ranked.map((id) => byId.get(id)).filter((quest): quest is Quest => Boolean(quest)),
     [byId, user.ranked],
   );
-  const deck = useMemo(
-    () => scoreQuests(ALL_QUESTS, user, { location }),
-    [location, user],
+  const savedQuests = useMemo(
+    () => Object.entries(user.swipes).filter(([, choice]) => choice === "yes").map(([id]) => byId.get(id)).filter((quest): quest is Quest => Boolean(quest)),
+    [byId, user.swipes],
   );
+  const deck = useMemo(() => {
+    const seen = new Set([...Object.keys(user.swipes), ...user.completed, ...user.ranked]);
+    const featuredDeck = FEATURED
+      .filter((quest) => !seen.has(quest.id))
+      .map((quest) => ({ quest, score: 100, distanceKm: null }));
+    return [...featuredDeck, ...scoreQuests(quests as Quest[], user, { location })];
+  }, [location, user]);
   const current = deck[0]?.quest;
-  const nextQuest = deck[1]?.quest;
-  const comparisonIndex = compare
-    ? Math.floor((compare.lo + compare.hi) / 2)
-    : -1;
-  const comparisonQuest =
-    comparisonIndex >= 0 ? byId.get(user.ranked[comparisonIndex]) : undefined;
-  const displayBody =
-    personalizedCopy.questId === current?.id && personalizedCopy.copy
-      ? personalizedCopy.copy
-      : current?.body;
-
-  useEffect(() => {
-    if (!current || rankedQuests.length < 3) return;
-    const controller = new AbortController();
-    void fetch("/api/personalize", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ quest: current, rankedQuests }),
-      signal: controller.signal,
-    })
-      .then((response) => response.json())
-      .then((data: { copy?: string }) =>
-        setPersonalizedCopy({ questId: current.id, copy: data.copy ?? "" }),
-      )
-      .catch(() => undefined);
-    return () => controller.abort();
-  }, [current, rankedQuests]);
+  const upNext = deck.slice(1, 3).map(({ quest }) => quest);
+  const comparisonIndex = compare ? Math.floor((compare.lo + compare.hi) / 2) : -1;
+  const comparisonQuest = comparisonIndex >= 0 ? byId.get(user.ranked[comparisonIndex]) : undefined;
 
   function commitSwipe(direction: "yes" | "no") {
     if (!current) return;
-    setUser((state) => ({
-      ...state,
-      swipes: { ...state.swipes, [current.id]: direction },
-    }));
+    setUser((state) => ({ ...state, swipes: { ...state.swipes, [current.id]: direction } }));
     setDragX(0);
     setSwipeAnimating(false);
   }
 
-  function swipeWithAnimation(direction: "yes" | "no") {
+  function swipe(direction: "yes" | "no") {
     if (!current || swipeAnimating) return;
     setDragging(false);
     setSwipeAnimating(true);
-    setDragX(direction === "yes" ? window.innerWidth * 1.15 : -window.innerWidth * 1.15);
-    window.setTimeout(() => commitSwipe(direction), 380);
+    setDragX(direction === "yes" ? window.innerWidth : -window.innerWidth);
+    window.setTimeout(() => commitSwipe(direction), 360);
   }
 
-  function handlePointerDown(event: ReactPointerEvent<HTMLElement>) {
+  function pointerDown(event: ReactPointerEvent<HTMLElement>) {
     pointerStart.current = event.clientX - dragX;
     setDragging(true);
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
-  function handlePointerMove(event: ReactPointerEvent<HTMLElement>) {
-    if (!dragging) return;
-    setDragX(event.clientX - pointerStart.current);
+  function pointerMove(event: ReactPointerEvent<HTMLElement>) {
+    if (dragging) setDragX(event.clientX - pointerStart.current);
   }
 
-  function handlePointerUp() {
+  function pointerUp() {
     if (!dragging) return;
     setDragging(false);
-    if (dragX > SWIPE_THRESHOLD) {
-      setDragX(window.innerWidth);
-      setSwipeAnimating(true);
-      window.setTimeout(() => commitSwipe("yes"), 320);
-    } else if (dragX < -SWIPE_THRESHOLD) {
-      setDragX(-window.innerWidth);
-      setSwipeAnimating(true);
-      window.setTimeout(() => commitSwipe("no"), 320);
-    } else {
-      setDragX(0);
-    }
+    if (dragX > SWIPE_THRESHOLD) swipe("yes");
+    else if (dragX < -SWIPE_THRESHOLD) swipe("no");
+    else setDragX(0);
   }
 
   function completeQuest(quest: Quest) {
     if (user.completed.includes(quest.id)) {
-      const rank = user.ranked.indexOf(quest.id) + 1;
-      setRankResult({ quest, rank });
-      return;
-    }
-    if (user.ranked.length === 0) {
-      setUser((state) => ({
-        ...state,
-        completed: [...state.completed, quest.id],
-        ranked: [quest.id],
-      }));
+      setRankResult({ quest, rank: user.ranked.indexOf(quest.id) + 1 });
+    } else if (!user.ranked.length) {
+      setUser((state) => ({ ...state, completed: [quest.id], ranked: [quest.id] }));
       setRankResult({ quest, rank: 1 });
-      return;
+    } else {
+      setCompare({ quest, lo: 0, hi: user.ranked.length });
     }
-    setCompare({ quest, lo: 0, hi: user.ranked.length });
   }
 
   function answerComparison(prefersNew: boolean) {
@@ -165,349 +188,183 @@ export default function Home() {
     const mid = Math.floor((compare.lo + compare.hi) / 2);
     const lo = prefersNew ? compare.lo : mid + 1;
     const hi = prefersNew ? mid : compare.hi;
-    if (lo < hi) {
-      setCompare({ ...compare, lo, hi });
-      return;
-    }
+    if (lo < hi) return setCompare({ ...compare, lo, hi });
     setUser((state) => ({
       ...state,
       completed: [...state.completed, compare.quest.id],
-      ranked: [
-        ...state.ranked.slice(0, lo),
-        compare.quest.id,
-        ...state.ranked.slice(lo),
-      ],
+      ranked: [...state.ranked.slice(0, lo), compare.quest.id, ...state.ranked.slice(lo)],
     }));
     setRankResult({ quest: compare.quest, rank: lo + 1 });
     setCompare(null);
   }
 
-  function openShare() {
-    if (!current) return;
-    setShareOpen(true);
-  }
-
   function requestLocation() {
     if (!navigator.geolocation || locating) return;
     setLocating(true);
-    setLocationLabel("Requesting location…");
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
-        const nextLocation = { lat: coords.latitude, lng: coords.longitude };
-        setLocation(nextLocation);
+        const next = { lat: coords.latitude, lng: coords.longitude };
+        setLocation(next);
         try {
-          const response = await fetch(
-            `/api/location?lat=${coords.latitude}&lng=${coords.longitude}`,
-          );
-          const data = (await response.json()) as { label?: string };
-          setLocationLabel(data.label || `${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}`);
+          const response = await fetch(`/api/location?lat=${coords.latitude}&lng=${coords.longitude}`);
+          const data = await response.json() as { label?: string };
+          setLocationLabel(data.label || "Current location");
         } catch {
-          setLocationLabel(`${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}`);
-        } finally {
-          setLocating(false);
+          setLocationLabel("Current location");
         }
-      },
-      () => {
-        setLocation(SF_FALLBACK);
-        setLocationLabel("Location permission denied · using San Francisco");
         setLocating(false);
       },
-      { timeout: 7000, maximumAge: 300_000 },
+      () => {
+        setLocationLabel("San Francisco");
+        setLocating(false);
+      },
+      { timeout: 7000, maximumAge: 300000 },
     );
   }
 
   async function sendQuest() {
-    if (!current || sending || !recipient.trim()) return;
-    const normalizedRecipient = recipient.trim();
-    window.localStorage.setItem("detour:recipient", normalizedRecipient);
+    if (!current || !recipient.trim() || sending) return;
     setSending(true);
+    window.localStorage.setItem("detour:recipient", recipient.trim());
     try {
       const response = await fetch("/api/send-quest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quest: current, recipient: normalizedRecipient }),
+        body: JSON.stringify({ quest: current, recipient: recipient.trim() }),
       });
-      const data = (await response.json()) as { error?: string; detail?: string };
+      const data = await response.json() as { error?: string; detail?: string };
       if (!response.ok) throw new Error(data.detail || data.error || "Could not send");
       setShareOpen(false);
-      commitSwipe("yes");
-      showNotice("Quest sent in iMessage.");
+      setNotice("Quest sent in iMessage.");
     } catch (error) {
-      showNotice(error instanceof Error ? error.message : "Could not send");
+      setNotice(error instanceof Error ? error.message : "Could not send");
     } finally {
       setSending(false);
+      window.setTimeout(() => setNotice(""), 4200);
     }
   }
 
-  function showNotice(message: string) {
-    setNotice(message);
-    window.setTimeout(() => setNotice(""), 3600);
-  }
-
-  if (!ready) return <main className="loading-shell">Finding your detour…</main>;
+  if (!ready) return <main className="loading-shell">Loading Detour</main>;
 
   return (
-    <main className="site-shell">
-      <header className="site-header">
-        <a className="brand" href="#top">detour<span>.</span></a>
-        <nav aria-label="Site navigation">
-          <a href="#how">How it works</a>
-          <a href="#experience">Explore</a>
-          <a href="#ranking">Your ranking</a>
+    <main className="app-shell">
+      <aside className="left-rail">
+        <button className="wordmark" onClick={() => setView("explore")}><span>↗</span>detour</button>
+        <nav className="side-nav" aria-label="Primary navigation">
+          <button className={view === "explore" ? "active" : ""} onClick={() => setView("explore")}><Icon>◉</Icon>Explore</button>
+          <button className={view === "saved" ? "active" : ""} onClick={() => setView("saved")}><Icon>♡</Icon>Saved <b>{savedQuests.length}</b></button>
+          <button className={view === "friends" ? "active" : ""} onClick={() => setView("friends")}><Icon>♙</Icon>Friends</button>
+          <button className={view === "ranking" ? "active" : ""} onClick={() => setView("ranking")}><Icon>#</Icon>Ranking</button>
         </nav>
-        <a className="header-cta" href="#experience">Open Detour</a>
-      </header>
-
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="hero-kicker">LOCAL DISCOVERY, RANKED BY TASTE</p>
-          <h1>Your best day in the city is not on a top-ten list.</h1>
-          <p>
-            Detour finds the specific, local things worth doing now—then learns
-            from what you actually loved.
-          </p>
-          <div className="hero-actions">
-            <a className="hero-primary" href="#experience">Explore nearby <span>↘</span></a>
-            <a className="hero-secondary" href="#how">See how it works</a>
-          </div>
-          <div className="hero-proof">
-            <div><strong>80</strong><span>curated SF quests</span></div>
-            <div><strong>3 taps</strong><span>to place a favorite</span></div>
-            <div><strong>1 list</strong><span>that gets more personal</span></div>
-          </div>
-        </div>
-        <div className="hero-visual" aria-label="Detour quest preview">
-          <div className="hero-orbit orbit-one" />
-          <div className="hero-orbit orbit-two" />
-          <div className="hero-card hero-card-back">
-            <span>02</span><strong>The fog exchange</strong>
-          </div>
-          <div className="hero-card hero-card-front">
-            <div className="hero-card-meta"><span>NEARBY</span><span>30 MIN</span></div>
-            <h2>The city looks different from here.</h2>
-            <p>Go before the first coffee run. Bring one person and leave your phones in your pockets until the view opens up.</p>
-            <div className="hero-card-place">⌖ Bernal Heights · 1.4 km</div>
-          </div>
-          <div className="hero-swipe-note">DRAG TO CHOOSE <span>→</span></div>
-        </div>
-      </section>
-
-      <section className="editorial-strip">
-        <p>Built for the question</p>
-        <h2>“We have a few hours. What should we actually do?”</h2>
-      </section>
-
-      <section className="how-section" id="how">
-        <div className="section-intro">
-          <p className="section-label">A clearer way to decide</p>
-          <h2>From “maybe” to a plan in minutes.</h2>
-        </div>
-        <div className="steps-grid">
-          <article><span>01</span><h3>Discover</h3><p>Swipe through specific things to do near your actual location.</p></article>
-          <article><span>02</span><h3>Go</h3><p>Send the plan to iMessage and get out the door.</p></article>
-          <article><span>03</span><h3>Decide</h3><p>Compare completed quests head-to-head to build your definitive list.</p></article>
-        </div>
-      </section>
-
-      <section className="experience-section" id="experience">
-        <header className="experience-header">
-          <div>
-            <p className="section-label">Interactive preview</p>
-            <h2>Find your next detour.</h2>
-          </div>
-          <button className="location-button" onClick={requestLocation} disabled={locating}>
-            <span>⌖</span>
-            <div><small>SEARCHING NEAR</small><strong>{locationLabel}</strong></div>
+        <div className="left-footer">
+          <button className="location-row" onClick={requestLocation}>
+            <span className="avatar-stack"><i>OK</i><i>SS</i><i>CK</i></span>
+            <span><small>PLANNING FOR</small><strong>Sidequest squad</strong></span>
+            <em>›</em>
           </button>
-        </header>
-
-        <div className="experience-grid">
-          <section className={`discover-panel ${tab === "ranking" ? "mobile-hidden" : ""}`}>
-            <div className="panel-heading">
-              <div>
-                <p className="section-label">Recommended for you</p>
-                <h3>Choose with a swipe</h3>
-              </div>
-              <span className="deck-count">{deck.length} nearby</span>
-            </div>
-
-            <div className="deck-stage">
-            {nextQuest && <div className="quest-card card-behind" aria-hidden="true" />}
-            {current ? (
-              <article
-                className={`quest-card card-active ${dragging ? "dragging" : ""} ${swipeAnimating ? "animating-out" : ""}`}
-                style={{
-                  transform: `translateX(${dragX}px) rotate(${dragX / 28}deg)`,
-                  opacity: Math.max(0.25, 1 - Math.abs(dragX) / 520),
-                }}
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerUp}
-              >
-                <div className={`swipe-stamp pass ${dragX < -35 ? "visible" : ""}`}>PASS</div>
-                <div className={`swipe-stamp save ${dragX > 35 ? "visible" : ""}`}>SAVE</div>
-                <div className="card-topline">
-                  <span className="vibe-label">{current.vibe}</span>
-                  <span>{deck[0].distanceKm?.toFixed(1)} km · {current.durationMin} min</span>
-                </div>
-                <div className="card-copy">
-                  <h2>{current.title}</h2>
-                  <p>{displayBody}</p>
-                </div>
-                <footer className="card-location">
-                  <div className="location-icon">⌖</div>
-                  <div>
-                    <strong>{current.location.name}</strong>
-                    <small>
-                      {current.location.neighborhood} · {current.bestTime[0].replaceAll("_", " ")}
-                    </small>
-                  </div>
-                  <span className="weird-level">W{current.weirdness}</span>
-                </footer>
-              </article>
-            ) : (
-              <div className="empty-deck">
-                <span>✓</span>
-                <h2>You reached the edge of the map.</h2>
-                <button onClick={() => setUser(EMPTY_STATE)}>Reset deck</button>
-              </div>
-            )}
-            </div>
-
-            {current && (
-              <div className="card-actions">
-                <button className="action-circle pass-action" onClick={() => swipeWithAnimation("no")} aria-label="Previous recommendation">
-                  ←
-                </button>
-                <button className="share-action" onClick={openShare}>
-                  <span>Send to iMessage</span><b>↗</b>
-                </button>
-                <button className="action-circle save-action" onClick={() => swipeWithAnimation("yes")} aria-label="Next recommendation">
-                  →
-                </button>
-              </div>
-            )}
-            {current && (
-              <button className="completed-link" onClick={() => completeQuest(current)}>
-                Already did this? Add it to your ranking
-              </button>
-            )}
-          </section>
-
-          <aside className={`ranking-panel ${tab === "discover" ? "mobile-hidden-ranking" : ""}`} id="ranking">
-            <div className="panel-heading">
-              <div>
-                <p className="section-label">Completed quests</p>
-                <h3>Your ranking</h3>
-              </div>
-              <span className="rank-count">{rankedQuests.length}</span>
-            </div>
-          {rankedQuests.length ? (
-            <ol className="ranking-list">
-              {rankedQuests.map((quest, index) => (
-                <li key={quest.id}>
-                  <span className="rank-number">{index + 1}</span>
-                  <div>
-                    <strong>{quest.title}</strong>
-                    <small>{quest.location.neighborhood} · {quest.vibe}</small>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <div className="empty-ranking">
-              <div className="empty-rank-number">#</div>
-              <strong>No ranking yet</strong>
-              <p>Complete a quest, then compare it head-to-head.</p>
-              <button onClick={() => setTab("discover")}>Find a quest</button>
-            </div>
-          )}
-          </aside>
+          <div className="profile-row"><span className="user-avatar">OM</span><strong>Om</strong></div>
+          <a className="contact-link" href="https://github.com/omkherde/corgi_hackathon" target="_blank" rel="noreferrer">Contact the Detour team ↗</a>
         </div>
+      </aside>
+
+      <section className="workspace">
+        <header className="mobile-header">
+          <button className="wordmark" onClick={() => setView("explore")}><span>↗</span>detour</button>
+          <button className="mobile-location" onClick={requestLocation}>⌖ {locationLabel}</button>
+        </header>
+        {view === "explore" && (
+          <>
+            <header className="workspace-header">
+              <div><p>{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date())} · {locationLabel}</p><h1>What are we doing?</h1></div>
+              <button className="search-button" aria-label="Search quests">⌕</button>
+            </header>
+            <button className="squad-pill" onClick={requestLocation}>
+              <span className="avatar-stack"><i>OK</i><i>SS</i><i>CK</i></span>
+              Planning for Sidequest squad <b>☷</b>
+            </button>
+            <div className="filters">
+              {["For tonight", "Low-key", "Make something", "Get moving", "Under an hour", "After dark"].map((item) => (
+                <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>
+              ))}
+            </div>
+            {current ? (
+              <>
+                <div className="card-stage">
+                  <article
+                    className={`quest-card ${dragging ? "dragging" : ""} ${swipeAnimating ? "leaving" : ""}`}
+                    style={{
+                      transform: `translateX(${dragX}px) rotate(${dragX / 34}deg)`,
+                      backgroundImage: `linear-gradient(180deg, rgba(8,8,5,.03) 28%, rgba(8,8,5,.88) 100%), url(${IMAGES[current.id] || "/quests/wood-line.jpg"})`,
+                    }}
+                    onPointerDown={pointerDown}
+                    onPointerMove={pointerMove}
+                    onPointerUp={pointerUp}
+                    onPointerCancel={pointerUp}
+                  >
+                    <div className={`choice-stamp reject ${dragX < -30 ? "show" : ""}`}>PASS</div>
+                    <div className={`choice-stamp accept ${dragX > 30 ? "show" : ""}`}>SAVE</div>
+                    <span className="quest-category">{current.vibe === "photo" ? "PHOTO MISSION" : current.vibe.toUpperCase()}</span>
+                    <button className="card-menu" aria-label="More quest options">•••</button>
+                    <div className="quest-copy">
+                      <div className="quest-place"><strong>{current.location.name}</strong><strong>{current.location.neighborhood}</strong></div>
+                      <h2>{current.title}</h2>
+                      <p>{current.body}</p>
+                      <div className="quest-facts"><span>◷ {current.durationMin} min</span><span>▱ Free</span><span>{current.groupSize === "group" ? "2-5 people" : current.groupSize}</span></div>
+                    </div>
+                    <a className="photo-credit" href={PHOTO_CREDITS[current.id] || "https://unsplash.com"} onClick={(event) => event.stopPropagation()} target="_blank" rel="noreferrer">Photo credit</a>
+                  </article>
+                </div>
+                <div className="deck-actions">
+                  <button className="round-action" onClick={() => swipe("no")} aria-label="Pass quest">×</button>
+                  <button className="save-action" onClick={() => swipe("yes")}>Save this quest</button>
+                  <button className="round-action share" onClick={() => setShareOpen(true)} aria-label="Send quest">↗</button>
+                </div>
+                <button className="completed-link" onClick={() => completeQuest(current)}>Already did this? Place it in your ranking</button>
+              </>
+            ) : (
+              <div className="empty-state"><h2>You saw every quest.</h2><button onClick={() => setUser(EMPTY_STATE)}>Reset the deck</button></div>
+            )}
+          </>
+        )}
+        {view === "saved" && <CollectionView title="Saved for later" subtitle="The quests you chose are ready when you are." quests={savedQuests} empty="Save a quest and it will appear here." />}
+        {view === "friends" && <FriendsView />}
+        {view === "ranking" && <RankingView quests={rankedQuests} onExplore={() => setView("explore")} />}
       </section>
 
-      <footer className="site-footer">
-        <a className="brand footer-brand" href="#top">detour<span>.</span></a>
-        <p>Do something worth ranking.</p>
-        <a href="#experience">Back to the deck ↑</a>
-      </footer>
+      <aside className="right-rail">
+        <section className="rail-section">
+          <header><h2>Up next</h2><button onClick={() => setView("saved")}>See all</button></header>
+          <div className="up-next-list">
+            {upNext.map((quest) => <button key={quest.id} onClick={() => swipe("no")}><Image src={IMAGES[quest.id] || "/quests/chinatown.jpg"} alt="" width={110} height={110} /><span><strong>{quest.title}</strong><small>{quest.location.neighborhood} · {quest.durationMin} min</small></span></button>)}
+          </div>
+        </section>
+        <section className="rail-section ranking-rail">
+          <header><h2>Your ranking</h2><button onClick={() => setView("ranking")}>Full list</button></header>
+          {rankedQuests.length ? <ol>{rankedQuests.slice(0, 3).map((quest, index) => <li key={quest.id}><span>{index + 1}</span><strong>{quest.title}</strong></li>)}</ol> : <p className="rail-empty">Complete a quest to start your list.</p>}
+        </section>
+        <div className="verified-note"><span>♮</span><p><strong>{ALL_QUESTS.length} verified ideas.</strong><small>Hours and access notes are included.</small></p></div>
+      </aside>
 
       <nav className="mobile-nav" aria-label="Mobile navigation">
-        <button className={tab === "discover" ? "active" : ""} onClick={() => setTab("discover")}>
-          <span>⌁</span>Discover
-        </button>
-        <button className={tab === "ranking" ? "active" : ""} onClick={() => setTab("ranking")}>
-          <span>#</span>Ranking
-        </button>
+        {(["explore", "saved", "friends", "ranking"] as View[]).map((item) => <button key={item} className={view === item ? "active" : ""} onClick={() => setView(item)}><span>{item === "explore" ? "◉" : item === "saved" ? "♡" : item === "friends" ? "♙" : "#"}</span>{item}</button>)}
       </nav>
 
-      {compare && comparisonQuest && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Rank completed quest">
-          <section className="comparison-modal">
-            <header>
-              <p className="section-label">Pairwise ranking</p>
-              <span>Comparison {Math.min(comparisonIndex + 1, user.ranked.length)} of ~{Math.ceil(Math.log2(user.ranked.length + 1))}</span>
-            </header>
-            <h2>Which was better?</h2>
-            <p className="modal-subtitle">Your answer determines the exact number. There is no tie.</p>
-            <button className="comparison-choice new-choice" onClick={() => answerComparison(true)}>
-              <span>NEW QUEST</span>
-              <strong>{compare.quest.title}</strong>
-              <small>{compare.quest.location.neighborhood}</small>
-            </button>
-            <div className="choice-divider"><span>OR</span></div>
-            <button className="comparison-choice" onClick={() => answerComparison(false)}>
-              <span>CURRENTLY #{comparisonIndex + 1}</span>
-              <strong>{comparisonQuest.title}</strong>
-              <small>{comparisonQuest.location.neighborhood}</small>
-            </button>
-          </section>
-        </div>
-      )}
-
-      {rankResult && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Ranking result">
-          <section className="rank-result-modal">
-            <p className="section-label">Ranking updated</p>
-            <div className="result-number">#{rankResult.rank}</div>
-            <h2>{rankResult.quest.title}</h2>
-            <p>That is its exact place in your list.</p>
-            <button onClick={() => { setRankResult(null); setTab("ranking"); }}>See full ranking</button>
-            <button className="text-button" onClick={() => setRankResult(null)}>Keep exploring</button>
-          </section>
-        </div>
-      )}
-
-      {shareOpen && current && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Send quest in iMessage">
-          <section className="share-modal">
-            <button className="modal-close" onClick={() => setShareOpen(false)} aria-label="Close">×</button>
-            <p className="section-label">Send with Photon</p>
-            <h2>Drop it in iMessage.</h2>
-            <p>Use a phone number with country code. Photon must allow this recipient on your project.</p>
-            <label htmlFor="recipient">Recipient</label>
-            <input
-              id="recipient"
-              value={recipient}
-              onChange={(event) => setRecipient(event.target.value)}
-              placeholder="+1 415 555 0123"
-              autoComplete="tel"
-              inputMode="tel"
-            />
-            <div className="share-preview">
-              <span>DETOUR</span>
-              <strong>{current.title}</strong>
-              <small>{current.location.name}</small>
-            </div>
-            <button className="primary-button" onClick={sendQuest} disabled={sending || !recipient.trim()}>
-              {sending ? "Sending…" : "Send quest"}
-            </button>
-          </section>
-        </div>
-      )}
-
-      {notice && <div className="notice" role="status">{notice}</div>}
+      {compare && comparisonQuest && <div className="modal-backdrop"><section className="modal-card"><p className="eyebrow">PLACE IT IN YOUR LIST</p><h2>Which was better?</h2><p>Your answer gives this quest an exact number.</p><button className="comparison-choice" onClick={() => answerComparison(true)}><small>NEW QUEST</small><strong>{compare.quest.title}</strong></button><span className="or">OR</span><button className="comparison-choice" onClick={() => answerComparison(false)}><small>CURRENTLY #{comparisonIndex + 1}</small><strong>{comparisonQuest.title}</strong></button></section></div>}
+      {rankResult && <div className="modal-backdrop"><section className="modal-card result-card"><p className="eyebrow">RANKING UPDATED</p><strong className="result-number">#{rankResult.rank}</strong><h2>{rankResult.quest.title}</h2><button className="modal-primary" onClick={() => { setRankResult(null); setView("ranking"); }}>See full ranking</button><button className="modal-secondary" onClick={() => setRankResult(null)}>Keep exploring</button></section></div>}
+      {shareOpen && current && <div className="modal-backdrop"><section className="modal-card share-modal"><button className="modal-close" onClick={() => setShareOpen(false)}>×</button><p className="eyebrow">SEND WITH PHOTON</p><h2>Send this quest.</h2><p>Enter a phone number with country code.</p><label htmlFor="recipient">Recipient</label><input id="recipient" value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="+1 415 555 0123" inputMode="tel" /><div className="message-preview"><small>DETOUR</small><strong>{current.title}</strong><span>{current.location.name}</span></div><button className="modal-primary" onClick={sendQuest} disabled={sending || !recipient.trim()}>{sending ? "Sending..." : "Send in iMessage"}</button></section></div>}
+      {notice && <div className="notice">{notice}</div>}
     </main>
   );
+}
+
+function CollectionView({ title, subtitle, quests: items, empty }: { title: string; subtitle: string; quests: Quest[]; empty: string }) {
+  return <section className="inner-view"><p className="eyebrow">YOUR DETOURS</p><h1>{title}</h1><p className="view-subtitle">{subtitle}</p>{items.length ? <div className="collection-grid">{items.map((quest) => <article key={quest.id} style={{ backgroundImage: `linear-gradient(180deg, transparent, rgba(0,0,0,.78)), url(${IMAGES[quest.id] || "/quests/wood-line.jpg"})` }}><span>{quest.location.neighborhood}</span><h2>{quest.title}</h2><p>{quest.durationMin} min · {quest.vibe}</p></article>)}</div> : <div className="empty-state"><h2>{empty}</h2></div>}</section>;
+}
+
+function FriendsView() {
+  return <section className="inner-view"><p className="eyebrow">SIDEQUEST SQUAD</p><h1>Friends</h1><p className="view-subtitle">See what your people saved, then pick one together.</p><div className="friends-grid">{[["SS", "Samuel", "Saved Lantern hour"], ["CK", "Chanyoung", "Ranked Walk the line #1"], ["AR", "Alex", "Saved The 1 AM doughnut run"]].map(([initials, name, action]) => <article key={name}><span>{initials}</span><div><h2>{name}</h2><p>{action}</p></div><button>Invite</button></article>)}</div></section>;
+}
+
+function RankingView({ quests: items, onExplore }: { quests: Quest[]; onExplore: () => void }) {
+  return <section className="inner-view ranking-view"><p className="eyebrow">COMPLETED QUESTS</p><h1>Your ranking</h1><p className="view-subtitle">Every completed quest gets one concrete position.</p>{items.length ? <ol>{items.map((quest, index) => <li key={quest.id}><span>{index + 1}</span><div><h2>{quest.title}</h2><p>{quest.location.neighborhood} · {quest.vibe}</p></div></li>)}</ol> : <div className="empty-state"><h2>Your first ranking starts after your first quest.</h2><button onClick={onExplore}>Explore quests</button></div>}</section>;
 }
